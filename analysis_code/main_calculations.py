@@ -45,14 +45,17 @@ name_outfile = input("Name of output file: ")
 threshold = 2.4 # cluster threshold - 2.4
 target_type = 4  # target atom type - should change this to type 4 for model simulations... / could add as user input
 
-n_lines = lines_in_file(name_dumpfile) # no of lines in file
+path_to_dumpfiles = '../../dumpfiles/'
+path_to_outfiles = '../outfiles/'
+
+n_lines = lines_in_file(path_to_dumpfiles + name_dumpfile) # no of lines in file
 n_frames = int(n_lines / (n_atoms + 9)) # +9 as 9 header lines in each frame
 
 # open the input file
-file_in = open(name_dumpfile, 'r')
+file_in = open(path_to_dumpfiles + name_dumpfile, 'r')
 
 # open the output file and print a header
-file_out = open(name_outfile, 'w')  
+file_out = open(path_to_outfiles + name_outfile, 'w')  
 file_out.write("# Timesteps, No of clusters, Mean size of clusters, Size of largest cluster\n")
 
 # go through the file frame by frame
