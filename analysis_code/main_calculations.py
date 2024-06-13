@@ -3,7 +3,7 @@ import operator # do we need this?
 import statistics as s
 from tqdm import tqdm
 
-from calculation_functions import dbscan, size_of_clusters, mean_size_of_clusters, size_of_largest_cluster
+from calculation_functions import dbscan, size_of_clusters, mean_size_of_clusters, size_of_largest_cluster, no_of_clusters_size_1
 from process_dump_file import Atom, readframe, lines_in_file
 
 ### main programs --> need to change stuff cause very sucky!
