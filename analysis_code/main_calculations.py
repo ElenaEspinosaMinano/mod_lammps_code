@@ -57,9 +57,9 @@ file_in = open(path_to_dumpfiles + name_dumpfile, 'r')
 
 # open the output file and print a header
 file_out = open(path_to_outfiles + name_outfile, 'w')  
-file_out.write("# Timesteps, No of clusters, Mean size of clusters, Size of largest cluster\n")
+file_out.write("# Timesteps, No of clusters, Mean size of clusters, Size of largest cluster, No of clusters of size 1\n")
 
-# go through the file frame by frame
+# go through the file frame by frame - tqdm is a progress bar
 for frame in tqdm(range(n_frames)):
     # read the frame, unwrapping periodic coordinates
     atoms, timesteps = readframe(file_in, n_atoms)
@@ -73,9 +73,10 @@ for frame in tqdm(range(n_frames)):
     cluster_size = size_of_clusters(cluster_ids)
     mean_cluster_size = mean_size_of_clusters(cluster_size)
     largest_cluster_size = size_of_largest_cluster(cluster_size)
+    size_1_count = no_of_clusters_size_1(cluster_size)
     
     # output some results to file
-    file_out.write("%i %i %.5f %i\n"%(timesteps, no_of_clusters, mean_cluster_size, largest_cluster_size))
+    file_out.write("%i %i %.5f %i %i\n"%(timesteps, no_of_clusters, mean_cluster_size, largest_cluster_size, size_1_count))
 
 
 # close the files

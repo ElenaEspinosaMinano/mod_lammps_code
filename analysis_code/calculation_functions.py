@@ -62,13 +62,25 @@ def size_of_clusters(cluster_ids):
 
 
 def mean_size_of_clusters(size_of_clusters):
-    """ Takes in list of size of clusters (in number of proteins) and returns the mean of proteins in a cluster """
+    """ Takes in list of cluster sizes (in number of proteins) and returns the mean number of proteins in a cluster """
     
     return s.fmean(size_of_clusters)
 
 
 
 def size_of_largest_cluster(size_of_clusters):
-    """ Takes in list of size of clusters and returns the no of proteins in largest cluster """
+    """ Takes in list of cluster sizes and returns the number of proteins in largest cluster """
     
     return max(size_of_clusters)
+
+
+def no_of_clusters_size_1(size_of_clusters):
+    """ Takes in a list of cluster sizes and returns the number of clusters with only 1 protein - i.e. size 1 """
+
+    return size_of_clusters.count(1)
+
+
+def no_proteins_bound_to_poly(size_of_clusters):
+    """ Takes in a list of cluster sizes and returns the number of proteins bound to the polymer """
+    
+    return size_of_clusters[0] # first element in list is the number of proteins bound to the polymer ?? TO DO: check this
