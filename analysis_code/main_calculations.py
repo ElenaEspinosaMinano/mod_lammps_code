@@ -1,6 +1,7 @@
 import numpy as np
 import operator # do we need this?
 import statistics as s
+from tqdm import tqdm
 
 from calculation_functions import dbscan, size_of_clusters, mean_size_of_clusters, size_of_largest_cluster
 from process_dump_file import Atom, readframe, lines_in_file
@@ -59,7 +60,7 @@ file_out = open(path_to_outfiles + name_outfile, 'w')
 file_out.write("# Timesteps, No of clusters, Mean size of clusters, Size of largest cluster\n")
 
 # go through the file frame by frame
-for frame in range(n_frames):
+for frame in tqdm(range(n_frames)):
     # read the frame, unwrapping periodic coordinates
     atoms, timesteps = readframe(file_in, n_atoms)
     
