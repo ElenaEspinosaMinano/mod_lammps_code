@@ -46,7 +46,7 @@ name_outfile = input("Name of output file: ")
 threshold = 2.4 # cluster threshold - 2.4
 target_type = 4  # target atom type - should change this to type 4 for model simulations... / could add as user input
 
-path_to_dumpfiles = '../../dumpfiles/'
+path_to_dumpfiles = '../../lammps_sims/dumpfiles/' # need to change this when running on local computer
 path_to_outfiles = '../outfiles/'
 
 n_lines = lines_in_file(path_to_dumpfiles + name_dumpfile) # no of lines in file
