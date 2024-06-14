@@ -104,7 +104,9 @@ def no_proteins_bound_to_poly(atoms, threshold=1.8):
             Length of list is no of polymer beads that protein is bound to. """
 
         return [i for i, other_atom in enumerate(atoms)
-                if i != j and other_atom.type in {1, 2, 3} and atoms[j].sep(other_atom) < threshold]
+                if i != j and other_atom.type in {2} and atoms[j].sep(other_atom) < threshold]
+                #if i != j and other_atom.type in {1, 2, 3} and atoms[j].sep(other_atom) < threshold]
+
 
     no_proteins_bound = 0 # intialises counter of number of proteins bound to a polymer bead to 0
     no_polymers_bound_to = [0] * len(atoms) # initialises a list of length of atoms to 0 - will contain the number of polymer beads atom ith is bound to

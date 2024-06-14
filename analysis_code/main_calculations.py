@@ -3,7 +3,7 @@ import operator # do we need this?
 import statistics as s
 from tqdm import tqdm
 
-from calculation_functions import dbscan, size_of_clusters, mean_size_of_clusters, size_of_largest_cluster, no_of_clusters_size_1
+from calculation_functions import dbscan, size_of_clusters, mean_size_of_clusters, size_of_largest_cluster, no_of_clusters_size_1, no_proteins_bound_to_poly
 from process_dump_file import Atom, readframe, lines_in_file
 
 ### main programs --> need to change stuff cause very sucky!
@@ -32,8 +32,8 @@ name_outfile = sys.argv[4] # name of output file - r_g_sticky_DNA
 
 name_dumpfile = input("Name of dumpfile: ")
 
-n_atoms = int(input("Integer no of atoms (in df): "))
-n_poly_atoms = int(input("Integer no of polymer atoms (in df): "))
+n_atoms = 5300 #int(input("Integer no of atoms (in df): "))
+n_poly_atoms = 5000 #int(input("Integer no of polymer atoms (in df): "))
 
 name_outfile = input("Name of output file: ")
 
@@ -57,7 +57,7 @@ file_in = open(path_to_dumpfiles + name_dumpfile, 'r')
 
 # open the output file and print a header
 file_out = open(path_to_outfiles + name_outfile, 'w')  
-file_out.write("# Timesteps, No of clusters, Mean size of clusters, Size of largest cluster, No of clusters of size 1\n")
+file_out.write("# Timesteps, No of clusters, Mean cluster size, Size largest cluster, No clusters size 1, No proteins bound to type 2 poly\n")
 
 # go through the file frame by frame - tqdm is a progress bar
 for frame in tqdm(range(n_frames)):
@@ -74,9 +74,11 @@ for frame in tqdm(range(n_frames)):
     mean_cluster_size = mean_size_of_clusters(cluster_size)
     largest_cluster_size = size_of_largest_cluster(cluster_size)
     size_1_count = no_of_clusters_size_1(cluster_size)
+
+    no_proteins_bound, no_polymers_bound_to = no_proteins_bound_to_poly(atoms)
     
     # output some results to file
-    file_out.write("%i %i %.5f %i %i\n"%(timesteps, no_of_clusters, mean_cluster_size, largest_cluster_size, size_1_count))
+    file_out.write("%i %i %.5f %i %i %i\n"%(timesteps, no_of_clusters, mean_cluster_size, largest_cluster_size, size_1_count, no_proteins_bound))
 
 
 # close the files
