@@ -68,7 +68,7 @@ for frame in tqdm(range(n_frames)):
     for i in range(len(atoms)):
         atoms[i].unwrap()
 
-    # perform calculations
+    # perform calculations on clusters
     no_of_clusters, cluster_ids = dbscan(atoms, threshold, target_type)
     cluster_size = size_of_clusters(cluster_ids)
     mean_cluster_size = mean_size_of_clusters(cluster_size)
