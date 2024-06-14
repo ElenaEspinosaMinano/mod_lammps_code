@@ -11,6 +11,7 @@ class Atom:
         self.id = 0                                              # id of the atom
         self.type = 0                                            # type of the atom
         self.L = np.array([0.0,0.0,0.0],dtype=np.float64)        # size of simulation box
+        self.half_L = self.L / 2                                 # half the size of simulation box
         self.x = np.array([0.0,0.0,0.0],dtype=np.float64)        # position of the atom
         self.image = np.array([0,0,0],dtype=np.int32)            # image flags for atoms
         self.x_unwrap = np.array([0.0,0.0,0.0],dtype=np.float64) # position of the atom - unwrapped coords
@@ -18,20 +19,38 @@ class Atom:
 
     
     def sep(self, atom2):
-        """Takes in self and atom2 and finds separation between them taking into account periodic BCs"""
+        """ Takes in self and atom2 and finds separation between them taking into account periodic BCs """
 
         dx = self.x[0] - atom2.x[0]
         dy = self.x[1] - atom2.x[1]
         dz = self.x[2] - atom2.x[2]
 
-        if dx > self.L[0] / 2:
+        if dx > self.half_L[0]:
             dx = self.L[0] - dx
-        if dy > self.L[1] / 2:
+        if dy > self.half_L[1]:
             dy = self.L[1] - dy
-        if dz > self.L[2] / 2:
+        if dz > self.half_L[2]:
             dz = self.L[2] - dz
 
         return np.sqrt(dx**2 + dy**2 + dz**2)
+    
+    def sep_2(self, atom2):
+        """ Takes in self and atom2 and finds their separation SQUARED WITHOUT taking into account periodic BCs """
+
+        dx = self.x[0] - atom2.x[0]
+        dy = self.x[1] - atom2.x[1]
+        dz = self.x[2] - atom2.x[2]
+
+        """
+        if dx > self.half_L[0]:
+            dx = self.L[0] - dx
+        if dy > self.half_L[1]:
+            dy = self.L[1] - dy
+        if dz > self.half_L[2]:
+            dz = self.L[2] - dz
+        """
+
+        return dx**2 + dy**2 + dz**2
 
     def minus(self,B):
         """ Subtract B.x vector from self.x vector """

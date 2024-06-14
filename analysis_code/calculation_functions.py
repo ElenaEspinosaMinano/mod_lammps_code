@@ -3,7 +3,8 @@
 import statistics as s
 
 def dbscan(atoms, threshold, target_type):
-    """ Takes in a list of Atom objects, distance threshold + target type. Sets the cluster id for atoms we are not interested in to -2.
+    """ Takes in a list of Atom objects, distance threshold + target type. 
+        Sets the cluster id for atoms we are not interested in to -2.
         Returns a list of cluster ids where the ith element is the cluster id for ith atom in input list """
 
     if not atoms: # edge case of empty atom list - return an empty cluster id list
@@ -13,7 +14,8 @@ def dbscan(atoms, threshold, target_type):
     cluster_ids = [-1] * len(atoms)  # Initialize cluster IDs for each atom; -1 means unclassified
 
     def find_neighbors(atom_index):
-        """ Takes in index of an atom and find the neighbours of that atom. Atoms are neighbours if within threshold distance of 2.4.
+        """ Takes in index of an atom and find the neighbours of that atom. 
+            Atoms are neighbours if within threshold distance of 2.4.
             Returns a list of neighbours of type=4 for atom index inputted """
 
         return [i for i, other_atom in enumerate(atoms)
@@ -59,7 +61,7 @@ def dbscan(atoms, threshold, target_type):
 
 def size_of_clusters(cluster_ids):
     """ Takes in a list of cluster ids. Returns a list of the number of proteins in a cluster, ignoring cluster ids of -2.
-        Eg: [-2, -2, -2, -2, ..., 1, 4, 2, 4, 1, 3, 4, ...] --> 2 in cluster 1, 1 in cluster 2, 1 in cluster 3, 3 in cluster 4 ... """
+        Eg: [-2, -2, ..., 1, 4, 2, 4, 1, 3, 4, ...] --> 2 in cluster 1, 1 in cluster 2, 1 in cluster 3, 3 in cluster 4 ... """
     
     size_of_clusters = [0] * max(cluster_ids) # 0 means 0 atoms in cluster i
     
@@ -94,24 +96,25 @@ def no_of_clusters_size_1(size_of_clusters):
     return size_of_clusters.count(1)
 
 
-def no_proteins_bound_to_poly(atoms, threshold=1.8):
+def no_proteins_bound_to_poly(atoms, threshold_2=3.24):
     """ Takes in a list of Atom objects. 
-        Returns the number of proteins bound to the polymer of type=1, 2 or 3 and a list of the number of polymer beads an atom is bound to.  """
+        Returns the no of proteins bound to the polymer of type=1, 2 or 3 + list of no of polymer beads an atom is bound to. """
 
     def find_polymers_bound_to(j):
-        """ Takes in index of a protein (type 4) and finds if it is bound to polymer (type=1, 2 or 3). Bound to poly if within threshold distance of 1.8.
+        """ Takes in index of a protein (type 4) and finds if it is bound to polymer (type=1, 2 or 3). 
+            Bound to polymer if within threshold distance of 1.8. Or if sep_2 < threshold_2 (3.24).
             Returns a list of indices of polymer beads of type=1, 2 or 3 for atom index inputted. 
             Length of list is no of polymer beads that protein is bound to. """
 
         return [i for i, other_atom in enumerate(atoms)
-                if i != j and other_atom.type in {2} and atoms[j].sep(other_atom) < threshold]
-                #if i != j and other_atom.type in {1, 2, 3} and atoms[j].sep(other_atom) < threshold]
+                #if i != j and other_atom.type in {2} and atoms[j].sep2(other_atom) < threshold_2]
+                if i != j and other_atom.type in {1, 2, 3} and atoms[j].sep_2(other_atom) < threshold_2]
 
 
     no_proteins_bound = 0 # intialises counter of number of proteins bound to a polymer bead to 0
-    no_polymers_bound_to = [0] * len(atoms) # initialises a list of length of atoms to 0 - will contain the number of polymer beads atom ith is bound to
+    no_polymers_bound_to = [0] * len(atoms) # initialises list of number of polymer beads that each protein is bound to, to 0
 
-    # loops through all atoms
+    # loops through all atoms - could make it loop through just the last 300 as those are the proteins!
     for j, atom in enumerate(atoms):
 
         # if atom is a protein (type 4)
@@ -119,17 +122,18 @@ def no_proteins_bound_to_poly(atoms, threshold=1.8):
 
             # find number of polymer beads (of any type - 1, 2 or 3) that protein is bound to
             poly_beads_list = find_polymers_bound_to(j)
-            no_polymers_bound_to[j] = len(poly_beads_list) # length of poly_beads_list is the number of polymer beads that protein is bound to
+            no_polymers_bound_to[j] = len(poly_beads_list) # length of list is the no of polymer beads that protein is bound to
 
             # if list is not empty
             if poly_beads_list:
                 no_proteins_bound += 1
 
-    return no_proteins_bound, no_polymers_bound_to # TO DO: TEST THIS!!!! ************
+    return no_proteins_bound, no_polymers_bound_to
 
 
 def fraction_clusters_bound_to_poly(atoms, cluster_ids, threshold=1.8, type=1):
-    """Takes in a list of Atom objects and their cluster ids. Returns the fraction of clusters bound to the polymer of type=1, 2 or 3 """
+    """Takes in a list of Atom objects and their cluster ids. 
+        Returns the fraction of clusters bound to the polymer of type=1, 2 or 3 """
     
 
     pass
