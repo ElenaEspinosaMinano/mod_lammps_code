@@ -142,13 +142,13 @@ def fraction_clusters_bound_to_poly(atoms, cluster_ids, target_types={1, 2, 3}, 
             Bound to polymer if within threshold distance of 1.8. Or if sep_2 < threshold_2 (3.24). 
             Stops and returns True if it is bound. False if not bound. """
         for i, other_atom in enumerate(atoms):
-            if i != j and other_atom.type in target_types and atoms[j].sep_2(other_atom) < threshold**2:
+            if i != j and other_atom.type in target_types and atoms[j].sep_2(other_atom) < threshold_2:
                 return True # stop when you find a protein in cluster that is within threshold distance of any polymer bead
         return False
 
     bound_clusters = []  # list of cluster ids of bound clusters
     no_of_clusters = max(cluster_ids) # total no of clusters is the max value of cluster_ids list
-
+    
     # loop through all cluster ids
     for j, cluster_id in enumerate(cluster_ids):
 
