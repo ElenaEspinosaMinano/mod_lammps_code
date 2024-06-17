@@ -161,7 +161,7 @@ data_frames_4 = {}
 for i in range(1, 9):
     data_frames_4[i] = pd.read_csv(path_to_outfiles + outfiles_list_4[i-1], sep=' ', comment='#', header=None)
     data_frames_4[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
-                              'Size_of_largest_cluster', 'No_of_clusters_of_size_1']
+                              'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly']
 
 
 # plot 1 - Number of clusters vs Timesteps
@@ -275,6 +275,161 @@ plt.grid(True)
 plt.savefig(save_plots_to + "plot_4_model_4_run_1.png")
 plt.show()
 
+
+# plot 5 - Number of proteins bound to polymer vs Timesteps
+plt.figure(figsize=(16, 10))
+
+plt.plot(data_frames_4[1]['Timesteps'], data_frames_4[1]['No_proteins_bound_to_poly'], marker='.', alpha=0.7, label='1 kBT')
+plt.plot(data_frames_4[2]['Timesteps'], data_frames_4[2]['No_proteins_bound_to_poly'], marker='.', alpha=0.7, label='2 kBT')
+plt.plot(data_frames_4[3]['Timesteps'], data_frames_4[3]['No_proteins_bound_to_poly'], marker='.', alpha=0.7, label='3 kBT')
+plt.plot(data_frames_4[4]['Timesteps'], data_frames_4[4]['No_proteins_bound_to_poly'], marker='.', alpha=0.7, label='4 kBT')
+plt.plot(data_frames_4[5]['Timesteps'], data_frames_4[5]['No_proteins_bound_to_poly'], marker='.', alpha=0.7, label='5 kBT')
+plt.plot(data_frames_4[6]['Timesteps'], data_frames_4[6]['No_proteins_bound_to_poly'], marker='.', alpha=0.7, label='6 kBT')
+plt.plot(data_frames_4[7]['Timesteps'], data_frames_4[7]['No_proteins_bound_to_poly'], marker='.', alpha=0.7, label='7 kBT')
+plt.plot(data_frames_4[8]['Timesteps'], data_frames_4[8]['No_proteins_bound_to_poly'], marker='.', alpha=0.7, label='8 kBT')
+
+plt.xlabel('Timesteps', fontsize ='16')
+plt.xticks(fontsize='14')
+
+plt.ylabel('Number of proteins bound to polymer', fontsize ='16')
+plt.yticks(fontsize='14')
+
+plt.title('Number of proteins bound to polymer vs Timesteps', fontsize ='16')
+plt.ticklabel_format(style='plain')
+
+plt.legend(fontsize="14", loc ="lower right")
+plt.grid(True)
+
+plt.savefig(save_plots_to + "plot_5_model_4_run_1.png")
+plt.show()
+
+
+
+###
+#   Second investigation - Model 4 plots - control
+###
+
+outfiles_list_4_control = [f'outfile_4_var_{i}_run_1_control.dat' for i in range(1, 9)]
+
+# dictionary to store data frames
+data_frames_4_control = {}
+
+# parse data
+for i in range(1, 9):
+    data_frames_4_control[i] = pd.read_csv(path_to_outfiles + outfiles_list_4_control[i-1], sep=' ', comment='#', header=None)
+    data_frames_4_control[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
+                              'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly']
+
+# plot graphs
+
+# plot 1 - Number of clusters vs Timesteps
+plt.figure(figsize=(16, 10))
+
+for i in range(1,9):
+    plt.plot(data_frames_4_control[i]['Timesteps'], data_frames_4_control[i]['No_of_clusters'], marker='.', alpha=0.7, label=f'{i} kBT')
+
+plt.xlabel('Timesteps', fontsize ='16')
+plt.xticks(fontsize='14')
+
+plt.ylabel('Number of clusters', fontsize ='16')
+plt.yticks(fontsize='14')
+
+plt.title('Number of clusters vs Timesteps', fontsize ='16')
+plt.ticklabel_format(style='plain')
+
+plt.legend(fontsize="14", loc ="center right")
+plt.grid(True)
+
+plt.savefig(save_plots_to + "plot_1_model_4_run_1_control.png")
+plt.show()
+
+
+# plot 2 - Mean size of clusters vs Timesteps
+plt.figure(figsize=(16, 10))
+
+for i in range(1,9):
+    plt.plot(data_frames_4_control[i]['Timesteps'], data_frames_4_control[i]['Mean_size_of_clusters'], marker='.', alpha=0.7, label=f'{i} kBT')
+
+plt.xlabel('Timesteps', fontsize ='16')
+plt.xticks(fontsize='14')
+
+plt.ylabel('Mean size of clusters', fontsize ='16')
+plt.yticks(fontsize='14')
+
+plt.title('Mean size of clusters vs Timesteps', fontsize ='16')
+plt.ticklabel_format(style='plain')
+
+plt.legend(fontsize="14", loc ="upper left")
+plt.grid(True)
+
+plt.savefig(save_plots_to + "plot_2_model_4_run_1_control.png")
+plt.show()
+
+
+# plot 3 - Size of largest cluster vs Timesteps
+plt.figure(figsize=(16, 10))
+
+for i in range(1,9):
+    plt.plot(data_frames_4_control[i]['Timesteps'], data_frames_4_control[i]['Size_of_largest_cluster'], marker='.', alpha=0.7, label=f'{i} kBT')
+
+plt.xlabel('Timesteps', fontsize ='16')
+plt.xticks(fontsize='14')
+
+plt.ylabel('Size of largest cluster', fontsize ='16')
+plt.yticks(fontsize='14')
+
+plt.title('Size of largest cluster vs Timesteps', fontsize ='16')
+plt.ticklabel_format(style='plain')
+
+plt.legend(fontsize="14", loc ="upper left")
+plt.grid(True)
+
+plt.savefig(save_plots_to + "plot_3_model_4_run_1_control.png")
+plt.show()
+
+
+# plot 4 - Number of clusters of size 1 vs Timesteps
+plt.figure(figsize=(16, 10))
+
+for i in range(1,9):
+    plt.plot(data_frames_4_control[i]['Timesteps'], data_frames_4_control[i]['No_of_clusters_of_size_1'], marker='.', alpha=0.7, label=f'{i} kBT')
+
+plt.xlabel('Timesteps', fontsize ='16')
+plt.xticks(fontsize='14')
+
+plt.ylabel('Number of clusters of size 1', fontsize ='16')
+plt.yticks(fontsize='14')
+
+plt.title('Number of clusters of size 1 vs Timesteps', fontsize ='16')
+plt.ticklabel_format(style='plain')
+
+plt.legend(fontsize="14", loc ="center right")
+plt.grid(True)
+
+plt.savefig(save_plots_to + "plot_4_model_4_run_1_control.png")
+plt.show()
+
+
+# plot 5 - Number of proteins bound to polymer vs Timesteps
+plt.figure(figsize=(16, 10))
+
+for i in range(1,9):
+    plt.plot(data_frames_4_control[i]['Timesteps'], data_frames_4_control[i]['No_proteins_bound_to_poly'], marker='.', alpha=0.7, label=f'{i} kBT')
+
+plt.xlabel('Timesteps', fontsize ='16')
+plt.xticks(fontsize='14')
+
+plt.ylabel('Number of proteins bound to polymer', fontsize ='16')
+plt.yticks(fontsize='14')
+
+plt.title('Number of proteins bound to polymer vs Timesteps', fontsize ='16')
+plt.ticklabel_format(style='plain')
+
+plt.legend(fontsize="14", loc ="center right")
+plt.grid(True)
+
+plt.savefig(save_plots_to + "plot_5_model_4_run_1_control.png")
+plt.show()
 
 
 

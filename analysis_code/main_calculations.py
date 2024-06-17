@@ -1,6 +1,7 @@
 import numpy as np
 import operator # do we need this?
 import statistics as s
+import sys
 from tqdm import tqdm
 
 from calculation_functions import dbscan, size_of_clusters, mean_size_of_clusters, size_of_largest_cluster, no_of_clusters_size_1, no_proteins_bound_to_poly
@@ -10,14 +11,14 @@ from process_dump_file import Atom, readframe, lines_in_file
 
 ######################## - User inputs (sys argv command line) but worse cause need to remember the order of inputs :/
 
-"""
+
 name_dumpfile = sys.argv[1] # name of dump file to read - dump.sticky_DNA+proteins
 
 n_atoms = int(sys.argv[2]) # no of atoms - 220
 n_poly_atoms = int(sys.argv[3]) # no of polymer atoms - 200
 
 name_outfile = sys.argv[4] # name of output file - r_g_sticky_DNA
-"""
+
 
 ######################## - Hardcoded (use for testing)
 
@@ -29,14 +30,14 @@ name_outfile = sys.argv[4] # name of output file - r_g_sticky_DNA
 #name_outfile = 'r_g_sticky_DNA' # name of output file - r_g_sticky_DNA
 
 ######################## - User inputs (command line) - best way imo
-
+"""
 name_dumpfile = input("Name of dumpfile: ")
 
 n_atoms = 5300 #int(input("Integer no of atoms (in df): "))
 n_poly_atoms = 5000 #int(input("Integer no of polymer atoms (in df): "))
 
 name_outfile = input("Name of output file: ")
-
+"""
 ########################
 
 # TO DO: could make this more automatic by giving a default of everything... user can say y/n to default and change if req

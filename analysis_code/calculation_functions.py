@@ -13,6 +13,8 @@ def dbscan(atoms, threshold, target_type):
     cluster_id = 0
     cluster_ids = [-1] * len(atoms)  # Initialize cluster IDs for each atom; -1 means unclassified
 
+    threshold_2 = threshold**2
+
     def find_neighbors(atom_index):
         """ Takes in index of an atom and find the neighbours of that atom. 
             Atoms are neighbours if within threshold distance of 2.4.
@@ -20,7 +22,7 @@ def dbscan(atoms, threshold, target_type):
 
         return [i for i, other_atom in enumerate(atoms)
                 if i != atom_index and atoms[atom_index].type == target_type and other_atom.type == target_type and 
-                atoms[atom_index].sep(other_atom) < threshold]
+                atoms[atom_index].sep_2(other_atom) < threshold_2]
     
     # loops through atoms list
     for i in range(len(atoms)):
@@ -96,7 +98,7 @@ def no_of_clusters_size_1(size_of_clusters):
     return size_of_clusters.count(1)
 
 
-def no_proteins_bound_to_poly(atoms, threshold_2=3.24):
+def no_proteins_bound_to_poly(atoms, target_types={1, 2, 3}, threshold_2=3.24):
     """ Takes in a list of Atom objects. 
         Returns the no of proteins bound to the polymer of type=1, 2 or 3 + list of no of polymer beads an atom is bound to. """
 
@@ -108,7 +110,7 @@ def no_proteins_bound_to_poly(atoms, threshold_2=3.24):
 
         return [i for i, other_atom in enumerate(atoms)
                 #if i != j and other_atom.type in {2} and atoms[j].sep2(other_atom) < threshold_2]
-                if i != j and other_atom.type in {1, 2, 3} and atoms[j].sep_2(other_atom) < threshold_2]
+                if i != j and other_atom.type in target_types and atoms[j].sep_2(other_atom) < threshold_2]
 
 
     no_proteins_bound = 0 # intialises counter of number of proteins bound to a polymer bead to 0
@@ -131,9 +133,35 @@ def no_proteins_bound_to_poly(atoms, threshold_2=3.24):
     return no_proteins_bound, no_polymers_bound_to
 
 
-def fraction_clusters_bound_to_poly(atoms, cluster_ids, threshold=1.8, type=1):
-    """Takes in a list of Atom objects and their cluster ids. 
+def fraction_clusters_bound_to_poly(atoms, cluster_ids, target_types={1, 2, 3}, threshold_2=3.24):
+    """ Takes in a list of Atom objects and their cluster ids. 
         Returns the fraction of clusters bound to the polymer of type=1, 2 or 3 """
-    
 
-    pass
+    def protein_bound_to_poly(j):
+        """ Takes in index of a protein (type 4) and finds if it is bound to polymer (type=1, 2 or 3). 
+            Bound to polymer if within threshold distance of 1.8. Or if sep_2 < threshold_2 (3.24). 
+            Stops and returns True if it is bound. False if not bound. """
+        for i, other_atom in enumerate(atoms):
+            if i != j and other_atom.type in target_types and atoms[j].sep_2(other_atom) < threshold**2:
+                return True # stop when you find a protein in cluster that is within threshold distance of any polymer bead
+        return False
+
+    bound_clusters = []  # list of cluster ids of bound clusters
+    no_of_clusters = max(cluster_ids) # total no of clusters is the max value of cluster_ids list
+
+    # loop through all cluster ids
+    for j, cluster_id in enumerate(cluster_ids):
+
+        # if cluster_id is not -2 (ie: it is the cluster id of a protein) and it is not already in bound_clusters
+        if cluster_id != -2 and cluster_id not in bound_clusters and atoms[j].type == 4:
+
+            # check if the protein belonging to that cluster is bound to a polymer bead. If it is add to bound_clusters list.
+            if protein_bound_to_poly(j):
+                bound_clusters.append(cluster_id)
+
+    fraction_bound = len(bound_clusters) / no_of_clusters
+    print(len(bound_clusters))
+    print(no_of_clusters)
+    print(fraction_bound)
+
+    return fraction_bound
