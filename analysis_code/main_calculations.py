@@ -58,7 +58,7 @@ file_in = open(path_to_dumpfiles + name_dumpfile, 'r')
 
 # open the output file and print a header
 file_out = open(path_to_outfiles + name_outfile, 'w')  
-file_out.write("# Timesteps, No of clusters, Mean cluster size, Size largest cluster, No clusters size 1, No proteins bound to type 2 poly\n")
+file_out.write("# Timesteps, No of clusters, Mean cluster size, Size largest cluster, No clusters size 1, No proteins bound to poly\n")
 
 # go through the file frame by frame - tqdm is a progress bar
 for frame in tqdm(range(n_frames)):

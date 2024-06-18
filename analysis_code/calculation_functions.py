@@ -165,3 +165,41 @@ def fraction_clusters_bound_to_poly(atoms, cluster_ids, target_types={1, 2, 3}, 
     print(fraction_bound)
 
     return fraction_bound
+
+
+def no_type_2_poly_bound_to_prot(atoms, target_types={4}, threshold_2=3.24):
+    """ Takes in a list of Atom objects. 
+        Returns the no of type 2 polymer bound to proteins + list of no of proteins that atom is bound to. """
+
+    def find_proteins_bound_to(j):
+        """ Takes in index of a sticky polymer (type=2) and finds if it is bound to protein (type=4). 
+            Bound to protein if within threshold distance of 1.8. Or if sep_2 < threshold_2 (3.24).
+            Returns a list of indices of proteins that polymer index inputted is bound to. 
+            Length of list is no of proteins that polymer is bound to. """
+
+        return [i for i, other_atom in enumerate(atoms)
+                if i != j and other_atom.type in target_types and atoms[j].sep_2(other_atom) < threshold_2]
+
+
+    no_type_2_poly_bound = 0 # intialises counter of number of proteins bound to a polymer bead to 0
+    no_proteins_bound_to = [0] * len(atoms) # initialises list of number of proteins that each polymer type 2 is bound to, to 0
+
+    # loops through all atoms
+    for j, atom in enumerate(atoms):
+
+        # if atom is a sticky polymer (type 2)
+        if atom.type == 2:
+
+            # find number of proteins (type 4) that sticky polymer is bound to
+            proteins_list = find_proteins_bound_to(j)
+            no_proteins_bound_to[j] = len(proteins_list) # length of list is the no of proteins that sticky polymer is bound to
+
+            # if list is not empty
+            if proteins_list:
+                no_type_2_poly_bound += 1
+
+    return no_type_2_poly_bound, no_proteins_bound_to
+
+
+def mean_no_type_2_poly_in_cluster():
+    pass
