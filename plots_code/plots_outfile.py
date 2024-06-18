@@ -207,42 +207,190 @@ for i in range(1, 9):
                                         'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly']
 
 
-# plot 1 - 
-mean_1 = []
-std_1 = []
-sem_1 = []
+# get states for a particular dataframe and column
+def get_stats(data_frames, column):
+    mean_list = []
+    std_list = []
+    sem_list = []
+    for i in range(1, 9):
+        mean, std, sem = calc_stats(data_frames[i][column])
+        mean_list.append(mean)
+        std_list.append(std)
+        sem_list.append(2 * sem)
+    return mean_list, std_list, sem_list
 
-mean_1_control = []
-std_1_control = []
-sem_1_control = []
 
-for i in range(1, 9):
-    mean, std, sem = calc_stats(data_frames_4_trimmed[i]['No_of_clusters'])
-    mean_1.append(mean) ; std_1.append(std) ; sem_1.append(2*sem)
 
-    mean2, std2, sem2 = calc_stats(data_frames_4_trimmed_control[i]['No_of_clusters'])
-    mean_1_control.append(mean2) ; std_1_control.append(std2) ; sem_1_control.append(2*sem2)
-
+# plot 1 - Number of clusters vs. protein-protein attraction strength
+mean_1, std_1, sem_1 = get_stats(data_frames_4_trimmed, 'No_of_clusters')
+mean_1_control, std_1_control, sem_1_control = get_stats(data_frames_4_trimmed_control, 'No_of_clusters')
 
 pp_attraction = ('1', '2', '3', '4', '5', '6', '7', '8')
 x_pos = np.arange(len(pp_attraction))
 
 fig, axs = plt.subplots(1, 2, sharey=True, tight_layout=True)
 
-left_bar = axs[0].bar(pp_attraction, mean_1, yerr=sem_1, color=colors[:9])
+left_bar_1 = axs[0].bar(pp_attraction, mean_1, yerr=sem_1, color=colors[:9])
+axs[0].bar_label(left_bar_1, labels=[f'{m:.2f}±{std_1[i]:.2f}' for i, m in enumerate(mean_1)], fontsize=10)
+
 axs[0].set_xticks(x_pos)
-axs[0].bar_label(left_bar, labels=[f'{m:.2f}±{std_1[i]:.2f}' for i, m in enumerate(mean_1)], color=colors[:9], fontsize=14)
+axs[0].tick_params(axis='x', labelsize=14)
+axs[0].tick_params(axis='y', labelsize=14)
 
-axs[0].set_xlabel('Protein-protein attraction strength (kBT)')
-axs[0].set_ylabel('Number of clusters')
-axs[0].set_title('Number of clusters vs. protein-protein attraction strength')
+axs[0].set_xlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
+axs[0].set_ylabel('Number of clusters', fontsize ='16')
+axs[0].set_title('Number of clusters vs. protein-protein attraction strength', fontsize ='16')
 
 
-axs[1].bar(pp_attraction, mean_1_control, yerr=sem_1_control, color=colors[:9])
+right_bar_1 = axs[1].bar(pp_attraction, mean_1_control, yerr=sem_1_control, color=colors[:9])
+axs[1].bar_label(right_bar_1, labels=[f'{m:.2f}±{std_1_control[i]:.2f}' for i, m in enumerate(mean_1_control)], fontsize=10)
+
 axs[1].set_xticks(x_pos)
+axs[1].tick_params(axis='x', labelsize=14)
+axs[1].tick_params(axis='y', labelsize=14)
 
-axs[1].set_xlabel('Protein-protein attraction strength (kBT)')
-axs[1].set_ylabel('Number of clusters')
-axs[1].set_title('Number of clusters vs. protein-protein attraction strength - Control')
+axs[1].set_xlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
+axs[1].set_ylabel('Number of clusters', fontsize ='16')
+axs[1].set_title('Number of clusters vs. protein-protein attraction strength - Control', fontsize ='16')
+
+plt.show()
+
+
+# plot 2 - Mean size of clusters vs. protein-protein attraction strength
+mean_2, std_2, sem_2 = get_stats(data_frames_4_trimmed, 'Mean_size_of_clusters')
+mean_2_control, std_2_control, sem_2_control = get_stats(data_frames_4_trimmed_control, 'Mean_size_of_clusters')
+
+pp_attraction = ('1', '2', '3', '4', '5', '6', '7', '8')
+x_pos = np.arange(len(pp_attraction))
+
+fig, axs = plt.subplots(1, 2, sharey=True, tight_layout=True)
+
+left_bar_2 = axs[0].bar(pp_attraction, mean_2, yerr=sem_2, color=colors[:9])
+axs[0].bar_label(left_bar_2, labels=[f'{m:.2f}±{std_2[i]:.2f}' for i, m in enumerate(mean_2)], fontsize=10)
+
+axs[0].set_xticks(x_pos)
+axs[0].tick_params(axis='x', labelsize=14)
+axs[0].tick_params(axis='y', labelsize=14)
+
+axs[0].set_xlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
+axs[0].set_ylabel('Mean size of clusters', fontsize ='16')
+axs[0].set_title('Mean size of clusters vs. protein-protein attraction strength', fontsize ='16')
+
+
+right_bar_2 = axs[1].bar(pp_attraction, mean_2_control, yerr=sem_2_control, color=colors[:9])
+axs[1].bar_label(right_bar_2, labels=[f'{m:.2f}±{std_2_control[i]:.2f}' for i, m in enumerate(mean_2_control)], fontsize=10)
+
+axs[1].set_xticks(x_pos)
+axs[1].tick_params(axis='x', labelsize=14)
+axs[1].tick_params(axis='y', labelsize=14)
+
+axs[1].set_xlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
+axs[1].set_ylabel('Mean size of clusters', fontsize ='16')
+axs[1].set_title('Mean size of clusters vs. protein-protein attraction strength - Control', fontsize ='16')
+
+plt.show()
+
+
+# plot 3 - Size of largest cluster vs. protein-protein attraction strength
+mean_3, std_3, sem_3 = get_stats(data_frames_4_trimmed, 'Size_of_largest_cluster')
+mean_3_control, std_3_control, sem_3_control = get_stats(data_frames_4_trimmed_control, 'Size_of_largest_cluster')
+
+pp_attraction = ('1', '2', '3', '4', '5', '6', '7', '8')
+x_pos = np.arange(len(pp_attraction))
+
+fig, axs = plt.subplots(1, 2, sharey=True, tight_layout=True)
+
+left_bar_3 = axs[0].bar(pp_attraction, mean_3, yerr=sem_3, color=colors[:9])
+axs[0].bar_label(left_bar_3, labels=[f'{m:.2f}±{std_3[i]:.2f}' for i, m in enumerate(mean_3)], fontsize=10)
+
+axs[0].set_xticks(x_pos)
+axs[0].tick_params(axis='x', labelsize=14)
+axs[0].tick_params(axis='y', labelsize=14)
+
+axs[0].set_xlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
+axs[0].set_ylabel('Size of largest cluster', fontsize ='16')
+axs[0].set_title('Size of largest cluster vs. protein-protein attraction strength', fontsize ='16')
+
+
+right_bar_3 = axs[1].bar(pp_attraction, mean_3_control, yerr=sem_3_control, color=colors[:9])
+axs[1].bar_label(right_bar_3, labels=[f'{m:.2f}±{std_3_control[i]:.2f}' for i, m in enumerate(mean_3_control)], fontsize=10)
+
+axs[1].set_xticks(x_pos)
+axs[1].tick_params(axis='x', labelsize=14)
+axs[1].tick_params(axis='y', labelsize=14)
+
+axs[1].set_xlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
+axs[1].set_ylabel('Size of largest cluster', fontsize ='16')
+axs[1].set_title('Size of largest cluster vs. protein-protein attraction strength - Control', fontsize ='16')
+
+plt.show()
+
+
+# plot 4 - Number of clusters of size 1 vs. protein-protein attraction strength
+mean_4, std_4, sem_4 = get_stats(data_frames_4_trimmed, 'No_of_clusters_of_size_1')
+mean_4_control, std_4_control, sem_4_control = get_stats(data_frames_4_trimmed_control, 'No_of_clusters_of_size_1')
+
+pp_attraction = ('1', '2', '3', '4', '5', '6', '7', '8')
+x_pos = np.arange(len(pp_attraction))
+
+fig, axs = plt.subplots(1, 2, sharey=True, tight_layout=True)
+
+left_bar_4 = axs[0].bar(pp_attraction, mean_4, yerr=sem_4, color=colors[:9])
+axs[0].bar_label(left_bar_4, labels=[f'{m:.2f}±{std_4[i]:.2f}' for i, m in enumerate(mean_4)], fontsize=10)
+
+axs[0].set_xticks(x_pos)
+axs[0].tick_params(axis='x', labelsize=14)
+axs[0].tick_params(axis='y', labelsize=14)
+
+axs[0].set_xlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
+axs[0].set_ylabel('Number of clusters of size 1', fontsize ='16')
+axs[0].set_title('Number of clusters of size 1 vs. protein-protein attraction strength', fontsize ='16')
+
+
+right_bar_4 = axs[1].bar(pp_attraction, mean_4_control, yerr=sem_4_control, color=colors[:9])
+axs[1].bar_label(right_bar_4, labels=[f'{m:.2f}±{std_4_control[i]:.2f}' for i, m in enumerate(mean_4_control)], fontsize=10)
+
+axs[1].set_xticks(x_pos)
+axs[1].tick_params(axis='x', labelsize=14)
+axs[1].tick_params(axis='y', labelsize=14)
+
+axs[1].set_xlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
+axs[1].set_ylabel('Number of clusters of size 1', fontsize ='16')
+axs[1].set_title('Number of clusters of size 1 vs. protein-protein attraction strength - Control', fontsize ='16')
+
+plt.show()
+
+
+# plot 5 - Number of proteins bound to polymer vs. protein-protein attraction strength
+mean_5, std_5, sem_5 = get_stats(data_frames_4_trimmed, 'No_proteins_bound_to_poly')
+mean_5_control, std_5_control, sem_5_control = get_stats(data_frames_4_trimmed_control, 'No_proteins_bound_to_poly')
+
+pp_attraction = ('1', '2', '3', '4', '5', '6', '7', '8')
+x_pos = np.arange(len(pp_attraction))
+
+fig, axs = plt.subplots(1, 2, sharey=True, tight_layout=True)
+
+left_bar_5 = axs[0].bar(pp_attraction, mean_5, yerr=sem_5, color=colors[:9])
+axs[0].bar_label(left_bar_5, labels=[f'{m:.2f}±{std_5[i]:.2f}' for i, m in enumerate(mean_5)], fontsize=10)
+
+axs[0].set_xticks(x_pos)
+axs[0].tick_params(axis='x', labelsize=14)
+axs[0].tick_params(axis='y', labelsize=14)
+
+axs[0].set_xlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
+axs[0].set_ylabel('Number of proteins bound to polymer', fontsize ='16')
+axs[0].set_title('Number of proteins bound to polymer vs. protein-protein attraction strength', fontsize ='16')
+
+
+right_bar_5 = axs[1].bar(pp_attraction, mean_5_control, yerr=sem_5_control, color=colors[:9])
+axs[1].bar_label(right_bar_5, labels=[f'{m:.2f}±{std_5_control[i]:.2f}' for i, m in enumerate(mean_5_control)], fontsize=10)
+
+axs[1].set_xticks(x_pos)
+axs[1].tick_params(axis='x', labelsize=14)
+axs[1].tick_params(axis='y', labelsize=14)
+
+axs[1].set_xlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
+axs[1].set_ylabel('Number of proteins bound to polymer', fontsize ='16')
+axs[1].set_title('Number of proteins bound to polymer vs. protein-protein attraction strength - Control', fontsize ='16')
 
 plt.show()
