@@ -58,7 +58,7 @@ file_in = open(path_to_dumpfiles + name_dumpfile, 'r')
 
 # open the output file and print a header
 file_out = open(path_to_outfiles + name_outfile, 'w')  
-file_out.write("# Timesteps, No of clusters, Mean cluster size, Size largest cluster, No clusters size 1, No proteins bound to poly\n")
+file_out.write("# Timesteps, No of clusters, Mean cluster size, Size largest cluster, No clusters size 1, No proteins bound to poly, Fraction of clusters bound to poly\n")
 
 # go through the file frame by frame - tqdm is a progress bar
 for frame in tqdm(range(n_frames)):
@@ -77,9 +77,11 @@ for frame in tqdm(range(n_frames)):
     size_1_count = no_of_clusters_size_1(cluster_size)
 
     no_proteins_bound, no_polymers_bound_to = no_proteins_bound_to_poly(atoms)
+
+    frac_clusters_bound = fraction_clusters_bound_to_poly(atoms, cluster_ids, no_of_clusters)
     
     # output some results to file
-    file_out.write("%i %i %.5f %i %i %i\n"%(timesteps, no_of_clusters, mean_cluster_size, largest_cluster_size, size_1_count, no_proteins_bound))
+    file_out.write("%i %i %.5f %i %i %i %.5f\n"%(timesteps, no_of_clusters, mean_cluster_size, largest_cluster_size, size_1_count, no_proteins_bound, frac_clusters_bound))
 
 
 # close the files

@@ -133,8 +133,8 @@ def no_proteins_bound_to_poly(atoms, target_types={1, 2, 3}, threshold_2=3.24):
     return no_proteins_bound, no_polymers_bound_to
 
 
-def fraction_clusters_bound_to_poly(atoms, cluster_ids, target_types={1, 2, 3}, threshold_2=3.24):
-    """ Takes in a list of Atom objects and their cluster ids. 
+def fraction_clusters_bound_to_poly(atoms, cluster_ids, no_of_clusters, target_types={1, 2, 3}, threshold_2=3.24):
+    """ Takes in a list of Atom objects, their cluster ids and no_of_clusters (at each frame). 
         Returns the fraction of clusters bound to the polymer of type=1, 2 or 3 """
 
     def protein_bound_to_poly(j):
@@ -147,22 +147,18 @@ def fraction_clusters_bound_to_poly(atoms, cluster_ids, target_types={1, 2, 3}, 
         return False
 
     bound_clusters = []  # list of cluster ids of bound clusters
-    no_of_clusters = max(cluster_ids) # total no of clusters is the max value of cluster_ids list
     
     # loop through all cluster ids
     for j, cluster_id in enumerate(cluster_ids):
 
         # if cluster_id is not -2 (ie: it is the cluster id of a protein) and it is not already in bound_clusters
-        if cluster_id != -2 and cluster_id not in bound_clusters and atoms[j].type == 4:
+        if cluster_id != -2 and cluster_id not in bound_clusters:
 
-            # check if the protein belonging to that cluster is bound to a polymer bead. If it is add to bound_clusters list.
+            # check if the protein belonging to that cluster id is bound to a polymer bead. If yes, add to bound_clusters list.
             if protein_bound_to_poly(j):
                 bound_clusters.append(cluster_id)
 
-    fraction_bound = len(bound_clusters) / no_of_clusters
-    print(len(bound_clusters))
-    print(no_of_clusters)
-    print(fraction_bound)
+    fraction_bound = len(bound_clusters) / no_of_clusters # no of bound clusters / total no of clusters
 
     return fraction_bound
 
