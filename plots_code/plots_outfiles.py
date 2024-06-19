@@ -323,7 +323,7 @@ for i in range(1, 9):
 
 
 
-# plot 1 - Number of clusters vs Timesteps
+# plot 1 - Number of clusters vs Timesteps - control
 plt.figure(figsize=(16, 10))
 
 for i in range(1,9):
@@ -335,7 +335,7 @@ plt.xticks(fontsize='14')
 plt.ylabel('Number of clusters', fontsize ='16')
 plt.yticks(fontsize='14')
 
-plt.title('Number of clusters vs Timesteps', fontsize ='16')
+plt.title('Number of clusters vs Timesteps - control', fontsize ='16')
 plt.ticklabel_format(style='plain')
 
 plt.legend(fontsize="14", loc ="center right")
@@ -345,7 +345,7 @@ plt.savefig(save_plots_to + "plot_1_model_4_run_1_control.png")
 plt.show()
 
 
-# plot 2 - Mean size of clusters vs Timesteps
+# plot 2 - Mean size of clusters vs Timesteps - control
 plt.figure(figsize=(16, 10))
 
 for i in range(1,9):
@@ -357,7 +357,7 @@ plt.xticks(fontsize='14')
 plt.ylabel('Mean size of clusters', fontsize ='16')
 plt.yticks(fontsize='14')
 
-plt.title('Mean size of clusters vs Timesteps', fontsize ='16')
+plt.title('Mean size of clusters vs Timesteps - control', fontsize ='16')
 plt.ticklabel_format(style='plain')
 
 plt.legend(fontsize="14", loc ="upper left")
@@ -367,7 +367,7 @@ plt.savefig(save_plots_to + "plot_2_model_4_run_1_control.png")
 plt.show()
 
 
-# plot 3 - Size of largest cluster vs Timesteps
+# plot 3 - Size of largest cluster vs Timesteps - control
 plt.figure(figsize=(16, 10))
 
 for i in range(1,9):
@@ -379,7 +379,7 @@ plt.xticks(fontsize='14')
 plt.ylabel('Size of largest cluster', fontsize ='16')
 plt.yticks(fontsize='14')
 
-plt.title('Size of largest cluster vs Timesteps', fontsize ='16')
+plt.title('Size of largest cluster vs Timesteps - control', fontsize ='16')
 plt.ticklabel_format(style='plain')
 
 plt.legend(fontsize="14", loc ="upper left")
@@ -389,7 +389,7 @@ plt.savefig(save_plots_to + "plot_3_model_4_run_1_control.png")
 plt.show()
 
 
-# plot 4 - Number of clusters of size 1 vs Timesteps
+# plot 4 - Number of clusters of size 1 vs Timesteps - control
 plt.figure(figsize=(16, 10))
 
 for i in range(1,9):
@@ -401,7 +401,7 @@ plt.xticks(fontsize='14')
 plt.ylabel('Number of clusters of size 1', fontsize ='16')
 plt.yticks(fontsize='14')
 
-plt.title('Number of clusters of size 1 vs Timesteps', fontsize ='16')
+plt.title('Number of clusters of size 1 vs Timesteps - control', fontsize ='16')
 plt.ticklabel_format(style='plain')
 
 plt.legend(fontsize="14", loc ="center right")
@@ -411,7 +411,7 @@ plt.savefig(save_plots_to + "plot_4_model_4_run_1_control.png")
 plt.show()
 
 
-# plot 5 - Number of proteins bound to polymer vs Timesteps
+# plot 5 - Number of proteins bound to polymer vs Timesteps - control
 plt.figure(figsize=(16, 10))
 
 for i in range(1,9):
@@ -420,7 +420,7 @@ for i in range(1,9):
 plt.xlabel('Timesteps', fontsize ='16')
 plt.xticks(fontsize='14')
 
-plt.ylabel('Number of proteins bound to polymer', fontsize ='16')
+plt.ylabel('Number of proteins bound to polymer - control', fontsize ='16')
 plt.yticks(fontsize='14')
 
 plt.title('Number of proteins bound to polymer vs Timesteps', fontsize ='16')
@@ -438,7 +438,7 @@ plt.show()
 #   Testing plot for new function calculating number of proteins bound to polymer type 2 + mean number of polymer beads proteins are bound
 ###
 
-
+"""
 # file path
 path_test_file = '/home/s2205640/Documents/summer_project/mod_lammps_code/outfiles/outfile_test.run'
 
@@ -488,3 +488,4 @@ plt.grid(True)
 #plt.savefig(save_plots_to + "plot_1_run_1.png")
 plt.show()
 
+"""
