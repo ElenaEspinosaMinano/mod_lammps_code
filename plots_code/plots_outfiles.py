@@ -14,7 +14,6 @@ else:
 
 
 
-
 ###
 #   First investigation - Model 1, 2 + 3 plots
 ###
@@ -29,6 +28,7 @@ for i in range(1, 4):
     data_frames_123[i] = pd.read_csv(path_to_outfiles + outfiles_list_123[i-1], sep=' ', comment='#', header=None)
     data_frames_123[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
                               'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly']
+
 
 
 # plot 1 - Number of clusters vs Timesteps
@@ -162,6 +162,7 @@ for i in range(1, 9):
     data_frames_4[i] = pd.read_csv(path_to_outfiles + outfiles_list_4[i-1], sep=' ', comment='#', header=None)
     data_frames_4[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
                               'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly']
+
 
 
 # plot 1 - Number of clusters vs Timesteps
@@ -320,7 +321,7 @@ for i in range(1, 9):
     data_frames_4_control[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
                               'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly']
 
-# plot graphs
+
 
 # plot 1 - Number of clusters vs Timesteps
 plt.figure(figsize=(16, 10))

@@ -43,7 +43,7 @@ def calc_stats(data_frame):
 prop_cycle = plt.rcParams['axes.prop_cycle']
 colors = prop_cycle.by_key()['color']
 
-"""
+
 
 # plot 1 - Number of clusters vs Timesteps
 plt.figure(figsize=(16, 10))
@@ -184,7 +184,8 @@ plt.grid(True)
 plt.savefig(save_plots_to + "plot_5_model_123_SS_run_1.png")
 plt.show()
 
-"""
+
+
 
 ###
 #   Second investigation - Model 4 plots (normal + control)
@@ -207,7 +208,7 @@ for i in range(1, 9):
                                         'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly']
 
 
-# get states for a particular dataframe and column
+# get stats for a particular dataframe and column
 def get_stats(data_frames, column):
     mean_list = []
     std_list = []
