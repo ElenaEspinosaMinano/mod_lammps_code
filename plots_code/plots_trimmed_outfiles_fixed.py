@@ -37,8 +37,8 @@ data_frames_123_trimmed = {}
 for i in range(1, 4):
     data_frames_123_trimmed[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_123[i-1], sep=' ', comment='#', header=None)
     data_frames_123_trimmed[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
-                                        'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly']
-
+                                        'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
+                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot']
 
 
 # get stats of models 123 for a particular dataframe and column + append it to a list
@@ -58,12 +58,12 @@ prop_cycle = plt.rcParams['axes.prop_cycle']
 colors = prop_cycle.by_key()['color']
 
 
+models = ('Model 1', 'Model 2', 'Model 3')
+x_pos = np.arange(len(models))
+
 
 # plot 1 - Number of clusters vs Timesteps - Mean ± SEM and STD
 mean_123_1, std_123_1, sem_123_1 = get_stats_123(data_frames_123_trimmed, 'No_of_clusters')
-
-models = ('Model 1', 'Model 2', 'Model 3')
-x_pos = np.arange(len(models))
 
 bar_labels_mean = [f'{model}: {mean_123_1[i]:.2f} ± {sem_123_1[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
 bar_labels_std = [f'{model}: {std_123_1[i]:.2f} ± ---' for i, model in enumerate(models)]
@@ -98,9 +98,6 @@ plt.show()
 # plot 2 - Mean size of clusters vs Timesteps - Mean ± SEM and STD
 mean_123_2, std_123_2, sem_123_2 = get_stats_123(data_frames_123_trimmed, 'Mean_size_of_clusters')
 
-models = ('Model 1', 'Model 2', 'Model 3')
-x_pos = np.arange(len(models))
-
 bar_labels_mean = [f'{model}: {mean_123_2[i]:.2f} ± {sem_123_2[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
 bar_labels_std = [f'{model}: {std_123_2[i]:.2f} ± ---' for i, model in enumerate(models)]
 
@@ -133,9 +130,6 @@ plt.show()
 
 # plot 3 - Size of largest cluster vs Timesteps - Mean ± SEM and STD
 mean_123_3, std_123_3, sem_123_3 = get_stats_123(data_frames_123_trimmed, 'Size_of_largest_cluster')
-
-models = ('Model 1', 'Model 2', 'Model 3')
-x_pos = np.arange(len(models))
 
 bar_labels_mean = [f'{model}: {mean_123_3[i]:.2f} ± {sem_123_3[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
 bar_labels_std = [f'{model}: {std_123_3[i]:.2f} ± ---' for i, model in enumerate(models)]
@@ -170,9 +164,6 @@ plt.show()
 # plot 4 - Number of clusters of size 1 vs Timesteps - Mean ± SEM and STD
 mean_123_4, std_123_4, sem_123_4 = get_stats_123(data_frames_123_trimmed, 'No_of_clusters_of_size_1')
 
-models = ('Model 1', 'Model 2', 'Model 3')
-x_pos = np.arange(len(models))
-
 bar_labels_mean = [f'{model}: {mean_123_4[i]:.2f} ± {sem_123_4[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
 bar_labels_std = [f'{model}: {std_123_4[i]:.2f} ± ---' for i, model in enumerate(models)]
 
@@ -206,9 +197,6 @@ plt.show()
 # plot 5 - Number of proteins bound to polymer vs Timesteps - Mean ± 2 SEM and STD
 mean_123_5, std_123_5, sem_123_5 = get_stats_123(data_frames_123_trimmed, 'No_proteins_bound_to_poly')
 
-models = ('Model 1', 'Model 2', 'Model 3')
-x_pos = np.arange(len(models))
-
 bar_labels_mean = [f'{model}: {mean_123_5[i]:.2f} ± {sem_123_5[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
 bar_labels_std = [f'{model}: {std_123_5[i]:.2f} ± ---' for i, model in enumerate(models)]
 
@@ -238,6 +226,38 @@ axs[1].legend(fontsize=14)
 plt.savefig(save_plots_to + "plot_5_model_123_SS_run_1.png", dpi='figure')
 plt.show()
 
+
+# plot 6 - Fraction of clusters bound to polymer vs Timesteps - Mean ± 1 SEM and STD
+mean_123_6, std_123_6, sem_123_6 = get_stats_123(data_frames_123_trimmed, 'Fraction_clusters_bound_to_poly')
+
+bar_labels_mean = [f'{model}: {mean_123_6[i]:.2f} ± {sem_123_6[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
+bar_labels_std = [f'{model}: {std_123_6[i]:.2f} ± ---' for i, model in enumerate(models)]
+
+fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
+
+left_bar_5 = axs[0].bar(models, mean_123_6, yerr=sem_123_6, label=bar_labels_mean, color=colors[:4])
+
+axs[0].set_xticks(x_pos)
+axs[0].tick_params(axis='x', labelsize=14)
+axs[0].tick_params(axis='y', labelsize=14)
+#axs[0].set_xlabel('Models', fontsize ='16')
+axs[0].set_ylabel('Fraction of clusters bound to polymer', fontsize ='16')
+axs[0].set_title('Fraction of clusters bound to polymer for different models - Mean ± 1 SEM', fontsize ='16')
+axs[0].legend(fontsize=14)
+
+
+right_bar_5 = axs[1].bar(models, std_123_6, label=bar_labels_std, color=colors[:4])
+
+axs[1].set_xticks(x_pos)
+axs[1].tick_params(axis='x', labelsize=14)
+axs[1].tick_params(axis='y', labelsize=14)
+#axs[1].set_xlabel('Models', fontsize ='16')
+axs[1].set_ylabel('Fraction of clusters bound to polymer', fontsize ='16')
+axs[1].set_title('Fraction of clusters bound to polymer for different models - STD', fontsize ='16')
+axs[1].legend(fontsize=14)
+
+plt.savefig(save_plots_to + "plot_6_model_123_SS_run_1.png", dpi='figure')
+plt.show()
 
 
 
