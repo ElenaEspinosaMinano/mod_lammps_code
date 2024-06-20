@@ -16,82 +16,123 @@ else:
     save_plots_to = '/home/s2205640/Documents/summer_project/mod_lammps_code/plots/'
 
 
-def calc_stats(data_frame):
+def count_cluster_sizes(cs_outfile_name):
 
-    mean = data_frame.mean()
-    std = data_frame.std() # sample standard deviation, normalized by 1 / 1(N-1)
-    sem = std / np.sqrt(data_frame.count()) # data_frame.count() = N = 201
+    # initialise Counter object to keep track of cluster sizes in cs_outfile
+    cluster_size_counter = Counter()
 
-    return mean, std, sem
+    with open(f"{path_to_trimmed_outfiles}{cs_outfile_name}", "r") as file:
+        for line in file:
 
+            if line.strip() == "" or line.startswith("#"):  # skip empty lines and comments
+                continue
 
-###
-#   First investigation - Model 1, 2 + 3 plots
-###
+            _, sizes_str = line.split(":") # extract cluster sizes part after the colon 
+            sizes_str = sizes_str.strip()  # strip leading/trailing whitespace
 
-trimmed_outfiles_list_123 = [f'trimmed_outfile_{i}_run_1.dat' for i in range(1, 4)]
+            sizes_list = eval(sizes_str) # evaluate str representation of list into actual list obeject
 
-# dictionary to store data frames
-data_frames_123_trimmed = {}
-
-# parse data
-for i in range(1, 4):
-    data_frames_123_trimmed[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_123[i-1], sep=' ', comment='#', header=None)
-    data_frames_123_trimmed[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
-                                        'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly']
+            cluster_size_counter.update(sizes_list) # update counter with sizes list
+    
+    return cluster_size_counter
 
 
+def get_counts_and_sizes(cluster_size_counter):
+    
+    # extract cluster sizes and number of counts from cluster_size_counter
+    cluster_sizes = list(cluster_size_counter.keys())
+    counts = list(cluster_size_counter.values())
 
-# get stats of models 123 for a particular dataframe and column + append it to a list
-def get_stats_123(data_frames, column):
-    mean_list = []
-    std_list = []
-    sem_list = []
-    for i in range(1, 4):
-        mean, std, sem = calc_stats(data_frames[i][column])
-        mean_list.append(mean)
-        std_list.append(std)
-        sem_list.append(sem)
-    return mean_list, std_list, sem_list
+    sizes_list_step_1 = (np.arange(0, max(cluster_sizes)+1, 1)).tolist() # +1 as np.arange doesn't include endpoint
+
+    # gets value for key if in cluster_size_counter (ie. gets counts), if not it defaults that count to 0
+    counts_list = [cluster_size_counter.get(size, 0) for size in sizes_list_step_1]
+
+    return sizes_list_step_1, counts_list
+
+
+def plot_histogram_models_123(cs_list_step_1, counts_list, model, color):
+
+    plt.figure(figsize=(16, 10))
+    
+    plt.bar(cs_list_step_1, counts_list, color=color)
+
+    plt.xlabel('Cluster sizes')
+    plt.ylabel('Counts')
+    plt.title(f'Distribution of cluster sizes for Model {model}')
+    plt.xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # Ensure each cluster size is a tick on the x-axis
+    plt.grid(True, alpha=0.5)
+
+    plt.savefig(save_plots_to + f"cs_hist_plot_model_{model}_SS_run_1.png", dpi='figure')
+    plt.show()
+
+
+def plot_histogram_model_4(cs_list_step_1, counts_list, model, color):
+
+    plt.figure(figsize=(16, 10))
+    
+    plt.bar(cs_list_step_1, counts_list, color=color)
+
+    plt.xlabel('Cluster sizes')
+    plt.ylabel('Counts')
+    plt.title(f'Distribution of cluster sizes for Model 4 - protein attraction strength: {model} kBT')
+    plt.xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # Ensure each cluster size is a tick on the x-axis
+    plt.grid(True, alpha=0.5)
+
+    plt.savefig(save_plots_to + f"cs_hist_plot_model_4_{model}_SS_run_1.png", dpi='figure')
+    plt.show()
+
+
+def plot_histogram_model_4_control(cs_list_step_1, counts_list, model, color):
+
+    plt.figure(figsize=(16, 10))
+    
+    plt.bar(cs_list_step_1, counts_list, color=color)
+
+    plt.xlabel('Cluster sizes')
+    plt.ylabel('Counts')
+    plt.title(f'Distribution of cluster sizes for Model 4 (control) - protein attraction strength: {model} kBT')
+    plt.xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # Ensure each cluster size is a tick on the x-axis
+    plt.grid(True, alpha=0.5)
+
+    plt.savefig(save_plots_to + f"cs_hist_plot_model_4_{model}_SS_run_1_control.png", dpi='figure')
+    plt.show()
 
 
 prop_cycle = plt.rcParams['axes.prop_cycle']
 colors = prop_cycle.by_key()['color']
 
 
+###
+#   First investigation - Models 1, 2 + 3 histrogram plots of steady state cluster sizes
+###
 
-# plot 1 - Number of clusters vs Timesteps - Mean ± SEM and STD
-mean_123_1, std_123_1, sem_123_1 = get_stats_123(data_frames_123_trimmed, 'No_of_clusters')
+trimmed_outfiles_cs_list_123 = [f'trimmed_outfile_cs_{i}_run_1.dat' for i in range(1, 4)]
 
-models = ('Model 1', 'Model 2', 'Model 3')
-x_pos = np.arange(len(models))
-
-bar_labels_mean = [f'{model}: {mean_123_1[i]:.2f} ± {sem_123_1[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
-bar_labels_std = [f'{model}: {std_123_1[i]:.2f} ± ---' for i, model in enumerate(models)]
-
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
-
-left_bar_1 = axs[0].bar(models, mean_123_1, yerr=sem_123_1, label=bar_labels_mean, color=colors[:4])
-
-axs[0].set_xticks(x_pos)
-axs[0].tick_params(axis='x', labelsize=14)
-axs[0].tick_params(axis='y', labelsize=14)
-#axs[0].set_xlabel('Models', fontsize ='16')
-axs[0].set_ylabel('Number of clusters', fontsize ='16')
-axs[0].set_title('Number of clusters for different models - Mean ± 1 SEM', fontsize ='16')
-axs[0].legend(fontsize=14)
+for i in range(1, 4):
+    model_i_cs_counter = count_cluster_sizes(trimmed_outfiles_cs_list_123[i-1])
+    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter)
+    
+    plot_histogram_models_123(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
 
 
-right_bar_1 = axs[1].bar(models, std_123_1, label=bar_labels_std, color=colors[:4])
 
-axs[1].set_xticks(x_pos)
-axs[1].tick_params(axis='x', labelsize=14)
-axs[1].tick_params(axis='y', labelsize=14)
-#axs[1].set_xlabel('Models', fontsize ='16')
-axs[1].set_ylabel('Number of clusters', fontsize ='16')
-axs[1].set_title('Number of clusters for different models - STD', fontsize ='16')
-axs[1].legend(fontsize=14)
+###
+#   Second investigation - Model 4 histrogram plots of steady state cluster sizes + control
+###
 
-plt.savefig(save_plots_to + "plot_1_model_123_SS_run_1.png", dpi='figure')
-plt.show()
+trimmed_outfiles_cs_list_4 = [f'trimmed_outfile_cs_4_var_{i}_run_1.dat' for i in range(1, 9)]
 
+for i in range(1, 9):
+    model_i_cs_counter = count_cluster_sizes(trimmed_outfiles_cs_list_4[i-1])
+    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter)
+    
+    plot_histogram_model_4(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
+
+trimmed_outfiles_cs_list_4_control = [f'trimmed_outfile_cs_4_var_{i}_run_1_control.dat' for i in range(1, 9)]
+
+for i in range(1, 9):
+    model_i_cs_counter = count_cluster_sizes(trimmed_outfiles_cs_list_4_control[i-1])
+    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter)
+    
+    plot_histogram_model_4_control(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
