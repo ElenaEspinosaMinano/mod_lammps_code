@@ -1,4 +1,4 @@
-### Trim transient part of outfile
+### Trim transient part of cluster sizes outfile
 
 import os
 import sys
@@ -19,7 +19,7 @@ with open(path_to_trimmed_outfiles + name_outfile, 'r+') as fp:
 
     # loop through remaining lines and write back the ones that meet the condition
     for line in lines[1:]:  # skip header
-        timestep = int(line.split()[0])
+        timestep = int(line.split(':')[0].strip())
 
         # only write the lines greater than or equal to start_timestep
         if timestep >= start_timestep:
