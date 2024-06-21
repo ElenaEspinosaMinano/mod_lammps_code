@@ -99,32 +99,33 @@ def plot_histogram_model_4_control(cs_list_step_1, counts_list, model, color):
     plt.show()
 
 
-
 def subplots_hist_model_4(cs_list_step_1, counts_list, cs_list_step_1_control, counts_list_control, model, color):
 
     fig, axs = plt.subplots(1, 2, figsize=(16, 10))
 
-    fig.supxlabel('Cluster sizes')
-    fig.supylabel('Counts')
-    fig.suptitle(f'Distribution of cluster sizes for Model 4 (left) and control (right) - protein attraction strength: {model} kBT')
+    fig.supxlabel('Cluster sizes', fontsize ='16')
+    fig.supylabel('Counts', fontsize ='16')
+    fig.suptitle(f'Distribution of cluster sizes for Model 4 (left) and control (right) - protein attraction strength: {model} kBT', fontsize='16')
     #fig.grid(True, alpha=0.5)
     
     left_bar_1 = axs[0].bar(cs_list_step_1, counts_list, color=color)
 
-    axs[0].xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # Ensure each cluster size is a tick on the x-axis
+    axs[0].set_xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # Ensure each cluster size is a tick on the x-axis
 
     axs[0].tick_params(labelsize=14)
     axs[0].grid(True, alpha=0.5)
 
     right_bar_1 = axs[1].bar(cs_list_step_1_control, counts_list_control, color=color)
 
-    axs[1].xticks((np.arange(0, max(cs_list_step_1_control)+1, 5)).tolist())  # Ensure each cluster size is a tick on the x-axis
+    axs[1].set_xticks((np.arange(0, max(cs_list_step_1_control)+1, 10)).tolist())  # Ensure each cluster size is a tick on the x-axis
 
     axs[1].tick_params(labelsize=14)
     axs[1].grid(True, alpha=0.5)
     
-    plt.show()
+    fig.tight_layout(pad=1.08)
 
+    plt.savefig(save_plots_to + f"cs_hist_subplot_model_4_{model}_SS_run_1.png", dpi='figure')
+    plt.show()
 
 
 prop_cycle = plt.rcParams['axes.prop_cycle']
@@ -136,13 +137,13 @@ colors = prop_cycle.by_key()['color']
 ###
 
 trimmed_outfiles_cs_list_123 = [f'trimmed_outfile_cs_{i}_run_1.dat' for i in range(1, 4)]
-"""
+
 for i in range(1, 4):
     model_i_cs_counter = count_cluster_sizes(trimmed_outfiles_cs_list_123[i-1])
     model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter)
     
     plot_histogram_models_123(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
-"""
+
 
 
 ###
@@ -150,24 +151,11 @@ for i in range(1, 4):
 ###
 
 trimmed_outfiles_cs_list_4 = [f'trimmed_outfile_cs_4_var_{i}_run_1.dat' for i in range(1, 9)]
-"""
-for i in range(1, 9):
-    model_i_cs_counter = count_cluster_sizes(trimmed_outfiles_cs_list_4[i-1])
-    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter)
-    
-    plot_histogram_model_4(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
-
 trimmed_outfiles_cs_list_4_control = [f'trimmed_outfile_cs_4_var_{i}_run_1_control.dat' for i in range(1, 9)]
 
 for i in range(1, 9):
-    model_i_cs_counter = count_cluster_sizes(trimmed_outfiles_cs_list_4_control[i-1])
-    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter)
-    
-    plot_histogram_model_4_control(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
-"""
-for i in range(1, 9):
     model_i_cs_counter = count_cluster_sizes(trimmed_outfiles_cs_list_4[i-1])
-    model_i_cs_counter_control = count_cluster_sizes(trimmed_outfiles_cs_list_4[i-1])
+    model_i_cs_counter_control = count_cluster_sizes(trimmed_outfiles_cs_list_4_control[i-1])
 
     model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter)
     model_i_cs_list_step_1_control, model_i_counts_list_control = get_counts_and_sizes(model_i_cs_counter_control)
