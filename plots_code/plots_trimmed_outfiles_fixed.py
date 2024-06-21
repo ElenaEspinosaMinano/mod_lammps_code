@@ -18,7 +18,7 @@ else:
 def calc_stats(data_frame):
 
     mean = data_frame.mean()
-    std = data_frame.std() # sample standard deviation, normalized by 1 / 1(N-1)
+    std = data_frame.std() # sample standard deviation, normalized by 1 / sqrt(N-1)
     sem = std / np.sqrt(data_frame.count()) # data_frame.count() = N = 201
 
     return mean, std, sem
