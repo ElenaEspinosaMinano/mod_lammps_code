@@ -62,221 +62,58 @@ models = ('Model 1', 'Model 2', 'Model 3')
 x_pos = np.arange(len(models))
 
 
-# plot 1 - Number of clusters vs Timesteps - Mean ± SEM and STD
+def plots_models_123(mean_123, std_123, sem_123, column_name, column_no):
+    bar_labels_mean = [f'{model}: {mean_123[i]:.2f} ± {sem_123[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
+    bar_labels_std = [f'{model}: {std_123[i]:.2f} ± ---' for i, model in enumerate(models)]
+
+    fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
+
+    fig.supxlabel('Models', fontsize ='16')
+    fig.supylabel(column_name, fontsize ='16')
+    fig.suptitle(f'{column_name} for different models - Mean ± 1 SEM (left) and STD (right)', fontsize='16')
+
+    left_bar = axs[0].bar(models, mean_123, yerr=sem_123, capsize=2, label=bar_labels_mean, color=colors[:4])
+
+    axs[0].set_xticks(x_pos)
+    axs[0].tick_params(labelsize=14)
+    axs[0].legend(fontsize=14)
+    axs[0].grid(True, alpha=0.5)
+
+
+    right_bar = axs[1].bar(models, std_123, label=bar_labels_std, color=colors[:4])
+
+    axs[1].set_xticks(x_pos)
+    axs[1].tick_params(labelsize=14)
+    axs[1].legend(fontsize=14)
+    axs[1].grid(True, alpha=0.5)
+
+    plt.savefig(save_plots_to + f"plot_{column_no}_model_123_SS_run_1.png", dpi='figure')
+    plt.show()
+
+
+# plots 1 to 7 for models 1, 2 and 3 - Mean ± 1 SEM (left) and STD (right)
+
+
 mean_123_1, std_123_1, sem_123_1 = get_stats_123(data_frames_123_trimmed, 'No_of_clusters')
+plots_models_123(mean_123_1, std_123_1, sem_123_1, 'Number of clusters', 1)
 
-bar_labels_mean = [f'{model}: {mean_123_1[i]:.2f} ± {sem_123_1[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
-bar_labels_std = [f'{model}: {std_123_1[i]:.2f} ± ---' for i, model in enumerate(models)]
-
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
-
-fig.supxlabel('Models', fontsize ='16')
-fig.supylabel('Number of clusters', fontsize ='16')
-fig.suptitle('Number of clusters for different models - Mean ± 1 SEM (left) and STD (right)', fontsize='16')
-
-left_bar_1 = axs[0].bar(models, mean_123_1, yerr=sem_123_1, label=bar_labels_mean, color=colors[:4])
-
-axs[0].set_xticks(x_pos)
-axs[0].tick_params(labelsize=14)
-axs[0].legend(fontsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_1 = axs[1].bar(models, std_123_1, label=bar_labels_std, color=colors[:4])
-
-axs[1].set_xticks(x_pos)
-axs[1].tick_params(labelsize=14)
-axs[1].legend(fontsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_1_model_123_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 2 - Mean size of clusters vs Timesteps - Mean ± SEM and STD
 mean_123_2, std_123_2, sem_123_2 = get_stats_123(data_frames_123_trimmed, 'Mean_size_of_clusters')
+plots_models_123(mean_123_2, std_123_2, sem_123_2, 'Mean size of clusters', 2)
 
-bar_labels_mean = [f'{model}: {mean_123_2[i]:.2f} ± {sem_123_2[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
-bar_labels_std = [f'{model}: {std_123_2[i]:.2f} ± ---' for i, model in enumerate(models)]
-
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
-
-fig.supxlabel('Models', fontsize ='16')
-fig.supylabel('Mean size of clusters', fontsize ='16')
-fig.suptitle('Mean size of clusters for different models - Mean ± 1 SEM (left) and STD (right)', fontsize='16')
-
-left_bar_2 = axs[0].bar(models, mean_123_2, yerr=sem_123_2, label=bar_labels_mean, color=colors[:4])
-
-axs[0].set_xticks(x_pos)
-axs[0].tick_params(labelsize=14)
-axs[0].legend(fontsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_2 = axs[1].bar(models, std_123_2, label=bar_labels_std, color=colors[:4])
-
-axs[1].set_xticks(x_pos)
-axs[1].tick_params(labelsize=14)
-axs[1].legend(fontsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_2_model_123_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 3 - Size of largest cluster vs Timesteps - Mean ± SEM and STD
 mean_123_3, std_123_3, sem_123_3 = get_stats_123(data_frames_123_trimmed, 'Size_of_largest_cluster')
+plots_models_123(mean_123_3, std_123_3, sem_123_3, 'Size of largest cluster', 3)
 
-bar_labels_mean = [f'{model}: {mean_123_3[i]:.2f} ± {sem_123_3[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
-bar_labels_std = [f'{model}: {std_123_3[i]:.2f} ± ---' for i, model in enumerate(models)]
-
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
-
-fig.supxlabel('Models', fontsize ='16')
-fig.supylabel('Size of largest cluster', fontsize ='16')
-fig.suptitle('Size of largest cluster for different models - Mean ± 1 SEM (left) and STD (right)', fontsize='16')
-
-left_bar_3 = axs[0].bar(models, mean_123_3, yerr=sem_123_3, label=bar_labels_mean, color=colors[:4])
-
-axs[0].set_xticks(x_pos)
-axs[0].tick_params(labelsize=14)
-axs[0].legend(fontsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_3 = axs[1].bar(models, std_123_3, label=bar_labels_std, color=colors[:4])
-
-axs[1].set_xticks(x_pos)
-axs[1].tick_params(labelsize=14)
-axs[1].legend(fontsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_3_model_123_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 4 - Number of clusters of size 1 vs Timesteps - Mean ± SEM and STD
 mean_123_4, std_123_4, sem_123_4 = get_stats_123(data_frames_123_trimmed, 'No_of_clusters_of_size_1')
+plots_models_123(mean_123_4, std_123_4, sem_123_4, 'Number of clusters of size 1', 4)
 
-bar_labels_mean = [f'{model}: {mean_123_4[i]:.2f} ± {sem_123_4[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
-bar_labels_std = [f'{model}: {std_123_4[i]:.2f} ± ---' for i, model in enumerate(models)]
-
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
-
-fig.supxlabel('Models', fontsize ='16')
-fig.supylabel('Number of clusters of size 1', fontsize ='16')
-fig.suptitle('Number of clusters of size 1 for different models - Mean ± 1 SEM (left) and STD (right)', fontsize='16')
-
-left_bar_4 = axs[0].bar(models, mean_123_4, yerr=sem_123_4, label=bar_labels_mean, color=colors[:4])
-
-axs[0].set_xticks(x_pos)
-axs[0].tick_params(labelsize=14)
-axs[0].legend(fontsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_4 = axs[1].bar(models, std_123_4, label=bar_labels_std, color=colors[:4])
-
-axs[1].set_xticks(x_pos)
-axs[1].tick_params(labelsize=14)
-axs[1].legend(fontsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_4_model_123_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 5 - Number of proteins bound to polymer vs Timesteps - Mean ± 2 SEM and STD
 mean_123_5, std_123_5, sem_123_5 = get_stats_123(data_frames_123_trimmed, 'No_proteins_bound_to_poly')
+plots_models_123(mean_123_5, std_123_5, sem_123_5, 'Number of proteins bound to polymer', 5)
 
-bar_labels_mean = [f'{model}: {mean_123_5[i]:.2f} ± {sem_123_5[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
-bar_labels_std = [f'{model}: {std_123_5[i]:.2f} ± ---' for i, model in enumerate(models)]
-
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
-
-fig.supxlabel('Models', fontsize ='16')
-fig.supylabel('Number of proteins bound to polymer', fontsize ='16')
-fig.suptitle('Number of proteins bound to polymer for different models - Mean ± 1 SEM (left) and STD (right)', fontsize='16')
-
-left_bar_5 = axs[0].bar(models, mean_123_5, yerr=sem_123_5, label=bar_labels_mean, color=colors[:4])
-
-axs[0].set_xticks(x_pos)
-axs[0].tick_params(labelsize=14)
-axs[0].legend(fontsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_5 = axs[1].bar(models, std_123_5, label=bar_labels_std, color=colors[:4])
-
-axs[1].set_xticks(x_pos)
-axs[1].tick_params(labelsize=14)
-axs[1].legend(fontsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_5_model_123_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 6 - Fraction of clusters bound to polymer vs Timesteps - Mean ± 1 SEM and STD
 mean_123_6, std_123_6, sem_123_6 = get_stats_123(data_frames_123_trimmed, 'Fraction_clusters_bound_to_poly')
+plots_models_123(mean_123_6, std_123_6, sem_123_6, 'Fraction of clusters bound to polymer', 6)
 
-bar_labels_mean = [f'{model}: {mean_123_6[i]:.2f} ± {sem_123_6[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
-bar_labels_std = [f'{model}: {std_123_6[i]:.2f} ± ---' for i, model in enumerate(models)]
-
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
-
-fig.supxlabel('Models', fontsize ='16')
-fig.supylabel('Fraction of clusters bound to polymer', fontsize ='16')
-fig.suptitle('Fraction of clusters bound to polymer for different models - Mean ± 1 SEM (left) and STD (right)', fontsize='16')
-
-left_bar_6 = axs[0].bar(models, mean_123_6, yerr=sem_123_6, label=bar_labels_mean, color=colors[:4])
-
-axs[0].set_xticks(x_pos)
-axs[0].tick_params(labelsize=14)
-axs[0].legend(fontsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_6 = axs[1].bar(models, std_123_6, label=bar_labels_std, color=colors[:4])
-
-axs[1].set_xticks(x_pos)
-axs[1].tick_params(labelsize=14)
-axs[1].legend(fontsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_6_model_123_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 7 - Number of type 2 polymers bound to proteins vs Timesteps - Mean ± 1 SEM and STD
 mean_123_7, std_123_7, sem_123_7 = get_stats_123(data_frames_123_trimmed, 'No_type_2_poly_bound_to_prot')
-
-bar_labels_mean = [f'{model}: {mean_123_7[i]:.2f} ± {sem_123_7[i]:.2f} (1 SEM)' for i, model in enumerate(models)]
-bar_labels_std = [f'{model}: {std_123_7[i]:.2f} ± ---' for i, model in enumerate(models)]
-
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
-
-fig.supxlabel('Models', fontsize ='16')
-fig.supylabel('Number of type 2 polymers bound to proteins', fontsize ='16')
-fig.suptitle('Number of type 2 polymers bound to proteins for different models - Mean ± 1 SEM (left) and STD (right)', fontsize='16')
-
-left_bar_7 = axs[0].bar(models, mean_123_7, yerr=sem_123_7, label=bar_labels_mean, color=colors[:4])
-
-axs[0].set_xticks(x_pos)
-axs[0].tick_params(labelsize=14)
-axs[0].legend(fontsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_7 = axs[1].bar(models, std_123_7, label=bar_labels_std, color=colors[:4])
-
-axs[1].set_xticks(x_pos)
-axs[1].tick_params(labelsize=14)
-axs[1].legend(fontsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_7_model_123_SS_run_1.png", dpi='figure')
-plt.show()
+plots_models_123(mean_123_7, std_123_7, sem_123_7, 'Number of type 2 polymers bound to proteins', 7)
 
 
 
@@ -319,190 +156,64 @@ def get_stats_4(data_frames, column):
 pp_attraction = [1, 2, 3, 4, 5, 6, 7, 8]
 
 
-# plot 1 - Number of clusters vs. protein-protein attraction strength - Mean ± SEM with control
+def plots_model_4(mean_4, std_4, sem_4, mean_4_control, std_4_control, sem_4_control, column_name, column_no):
+    fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
+
+    fig.supxlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
+    fig.supylabel(f'{column_name}', fontsize ='16')
+    fig.suptitle(f'{column_name} vs. protein-protein attraction strength - Mean ± 1 SEM (left) and Control (right)', fontsize='16')
+
+    left_bar_1 = axs[0].errorbar(pp_attraction, mean_4, yerr=sem_4, capsize=2, fmt='.r', alpha=0.7, ecolor='black')
+
+    axs[0].set_xticks(pp_attraction)
+    axs[0].tick_params(labelsize=14)
+    axs[0].grid(True, alpha=0.5)
+
+
+    right_bar_1 = axs[1].errorbar(pp_attraction, mean_4_control, yerr=sem_4_control, capsize=2, fmt='.r', alpha=0.7, ecolor='black')
+
+    axs[1].set_xticks(pp_attraction)
+    axs[1].tick_params(labelsize=14)
+    axs[1].grid(True, alpha=0.5)
+
+    plt.savefig(save_plots_to + f"plot_{column_no}_model_4_SS_run_1.png", dpi='figure')
+    plt.show()
+
+
+# plots 1 to 7 for model 4 - Mean ± 1 SEM (left) and Control (right)
+
+
 mean_4_1, std_4_1, sem_4_1 = get_stats_4(data_frames_4_trimmed, 'No_of_clusters')
 mean_4_1_control, std_4_1_control, sem_4_1_control = get_stats_4(data_frames_4_trimmed_control, 'No_of_clusters')
 
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
+plots_model_4(mean_4_1, std_4_1, sem_4_1, mean_4_1_control, std_4_1_control, sem_4_1_control, 'Number of clusters', 1)
 
-fig.supxlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
-fig.supylabel('Number of clusters', fontsize ='16')
-fig.suptitle('Number of clusters vs. protein-protein attraction strength - Mean ± 1 SEM (left) and Control (right)', fontsize='16')
+mean_4_2, std_4_2, sem_4_2 = get_stats_4(data_frames_4_trimmed, 'Mean_size_of_clusters')
+mean_4_2_control, std_4_2_control, sem_4_2_control = get_stats_4(data_frames_4_trimmed_control, 'Mean_size_of_clusters')
 
-left_bar_1 = axs[0].errorbar(pp_attraction, mean_4_1, yerr=sem_4_1, fmt='or', alpha=0.7, ecolor='black')
+plots_model_4(mean_4_2, std_4_2, sem_4_2, mean_4_2_control, std_4_2_control, sem_4_2_control, 'Mean size of clusters', 2)
 
-axs[0].set_xticks(pp_attraction)
-axs[0].tick_params(labelsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_1 = axs[1].errorbar(pp_attraction, mean_4_1_control, yerr=sem_4_1_control, fmt='or', alpha=0.7, ecolor='black')
-
-axs[1].set_xticks(pp_attraction)
-axs[1].tick_params(labelsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_1_model_4_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 2 - Mean size of clusters vs. protein-protein attraction strength
-mean_5_1, std_5_1, sem_5_1 = get_stats_4(data_frames_4_trimmed, 'Mean_size_of_clusters')
-mean_5_1_control, std_5_1_control, sem_5_1_control = get_stats_4(data_frames_4_trimmed_control, 'Mean_size_of_clusters')
-
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
-
-fig.supxlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
-fig.supylabel('Mean size of clusters', fontsize ='16')
-fig.suptitle('Mean size of clusters vs. protein-protein attraction strength - Mean ± 1 SEM (left) and Control (right)', fontsize='16')
-
-left_bar_2 = axs[0].errorbar(pp_attraction, mean_5_1, yerr=sem_5_1, fmt='or', alpha=0.7, ecolor='black')
-
-axs[0].set_xticks(pp_attraction)
-axs[0].tick_params(labelsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_2 = axs[1].errorbar(pp_attraction, mean_5_1_control, yerr=sem_5_1_control, fmt='or', alpha=0.7, ecolor='black')
-
-axs[1].set_xticks(pp_attraction)
-axs[1].tick_params(labelsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_2_model_4_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 3 - Size of largest cluster vs. protein-protein attraction strength
 mean_4_3, std_4_3, sem_4_3 = get_stats_4(data_frames_4_trimmed, 'Size_of_largest_cluster')
 mean_4_3_control, std_4_3_control, sem_4_3_control = get_stats_4(data_frames_4_trimmed_control, 'Size_of_largest_cluster')
 
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
+plots_model_4(mean_4_3, std_4_3, sem_4_3, mean_4_3_control, std_4_3_control, sem_4_3_control, 'Size of largest cluster', 3)
 
-fig.supxlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
-fig.supylabel('Size of largest cluster', fontsize ='16')
-fig.suptitle('Size of largest cluster vs. protein-protein attraction strength - Mean ± 1 SEM (left) and Control (right)', fontsize='16')
-
-left_bar_3 = axs[0].errorbar(pp_attraction, mean_4_3, yerr=sem_4_3, fmt='or', alpha=0.7, ecolor='black')
-
-axs[0].set_xticks(pp_attraction)
-axs[0].tick_params(labelsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_3 = axs[1].errorbar(pp_attraction, mean_4_3_control, yerr=sem_4_3_control, fmt='or', alpha=0.7, ecolor='black')
-
-axs[1].set_xticks(pp_attraction)
-axs[1].tick_params(labelsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_3_model_4_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 4 - Number of clusters of size 1 vs. protein-protein attraction strength
 mean_4_4, std_4_4, sem_4_4 = get_stats_4(data_frames_4_trimmed, 'No_of_clusters_of_size_1')
 mean_4_4_control, std_4_4_control, sem_4_4_control = get_stats_4(data_frames_4_trimmed_control, 'No_of_clusters_of_size_1')
 
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
+plots_model_4(mean_4_4, std_4_4, sem_4_4, mean_4_4_control, std_4_4_control, sem_4_4_control, 'Number of clusters of size 1', 4)
 
-fig.supxlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
-fig.supylabel('Number of clusters of size 1', fontsize ='16')
-fig.suptitle('Number of clusters of size 1 vs. protein-protein attraction strength - Mean ± 1 SEM (left) and Control (right)', fontsize='16')
-
-left_bar_4 = axs[0].errorbar(pp_attraction, mean_4_4, yerr=sem_4_4, fmt='or', alpha=0.7, ecolor='black')
-
-axs[0].set_xticks(pp_attraction)
-axs[0].tick_params(labelsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_4 = axs[1].errorbar(pp_attraction, mean_4_4_control, yerr=sem_4_4_control, fmt='or', alpha=0.7, ecolor='black')
-
-axs[1].set_xticks(pp_attraction)
-axs[1].tick_params(labelsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_4_model_4_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 5 - Number of proteins bound to polymer vs. protein-protein attraction strength
 mean_4_5, std_4_5, sem_4_5 = get_stats_4(data_frames_4_trimmed, 'No_proteins_bound_to_poly')
 mean_4_5_control, std_4_5_control, sem_4_5_control = get_stats_4(data_frames_4_trimmed_control, 'No_proteins_bound_to_poly')
 
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
+plots_model_4(mean_4_5, std_4_5, sem_4_5, mean_4_5_control, std_4_5_control, sem_4_5_control, 'Number of proteins bound to polymer', 5)
 
-fig.supxlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
-fig.supylabel('Number of proteins bound to polymer', fontsize ='16')
-fig.suptitle('Number of proteins bound to polymer vs. protein-protein attraction strength - Mean ± 1 SEM (left) and Control (right)', fontsize='16')
-
-left_bar_5 = axs[0].errorbar(pp_attraction, mean_4_5, yerr=sem_4_5, fmt='or', alpha=0.7, ecolor='black')
-
-axs[0].set_xticks(pp_attraction)
-axs[0].tick_params(labelsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_5 = axs[1].errorbar(pp_attraction, mean_4_5_control, yerr=sem_4_5_control, fmt='or', alpha=0.7, ecolor='black')
-
-axs[1].set_xticks(pp_attraction)
-axs[1].tick_params(labelsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_5_model_4_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 6 - Fraction of clusters bound to polymer vs. protein-protein attraction strength
 mean_4_6, std_4_6, sem_4_6 = get_stats_4(data_frames_4_trimmed, 'Fraction_clusters_bound_to_poly')
 mean_4_6_control, std_4_6_control, sem_4_6_control = get_stats_4(data_frames_4_trimmed_control, 'Fraction_clusters_bound_to_poly')
 
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
+plots_model_4(mean_4_6, std_4_6, sem_4_6, mean_4_6_control, std_4_6_control, sem_4_6_control, 'Fraction of clusters bound to polymer', 6)
 
-fig.supxlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
-fig.supylabel('Fraction of clusters bound to polymer', fontsize ='16')
-fig.suptitle('Fraction of clusters bound to polymer vs. protein-protein attraction strength - Mean ± 1 SEM (left) and Control (right)', fontsize='16')
-
-left_bar_6 = axs[0].errorbar(pp_attraction, mean_4_6, yerr=sem_4_6, fmt='or', alpha=0.7, ecolor='black')
-
-axs[0].set_xticks(pp_attraction)
-axs[0].tick_params(labelsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_6 = axs[1].errorbar(pp_attraction, mean_4_6_control, yerr=sem_4_6_control, fmt='or', alpha=0.7, ecolor='black')
-
-axs[1].set_xticks(pp_attraction)
-axs[1].tick_params(labelsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_6_model_4_SS_run_1.png", dpi='figure')
-plt.show()
-
-
-# plot 7 - Number of type 2 polymers bound to proteins vs. protein-protein attraction strength
 mean_4_7, std_4_7, sem_4_7 = get_stats_4(data_frames_4_trimmed, 'No_type_2_poly_bound_to_prot')
 mean_4_7_control, std_4_7_control, sem_4_7_control = get_stats_4(data_frames_4_trimmed_control, 'No_type_2_poly_bound_to_prot')
 
-fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
-
-fig.supxlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
-fig.supylabel('Number of type 2 polymers bound to proteins', fontsize ='16')
-fig.suptitle('Number of type 2 polymers bound to proteins vs. protein-protein attraction strength - Mean ± 1 SEM (left) and Control (right)', fontsize='16')
-
-left_bar_7 = axs[0].errorbar(pp_attraction, mean_4_7, yerr=sem_4_7, fmt='or', alpha=0.7, ecolor='black')
-
-axs[0].set_xticks(pp_attraction)
-axs[0].tick_params(labelsize=14)
-axs[0].grid(True, alpha=0.5)
-
-
-right_bar_7 = axs[1].errorbar(pp_attraction, mean_4_7_control, yerr=sem_4_7_control, fmt='or', alpha=0.7, ecolor='black')
-
-axs[1].set_xticks(pp_attraction)
-axs[1].tick_params(labelsize=14)
-axs[1].grid(True, alpha=0.5)
-
-plt.savefig(save_plots_to + "plot_7_model_4_SS_run_1.png", dpi='figure')
-plt.show()
+plots_model_4(mean_4_7, std_4_7, sem_4_7, mean_4_7_control, std_4_7_control, sem_4_7_control, 'Number of type 2 polymers bound to proteins', 7)
