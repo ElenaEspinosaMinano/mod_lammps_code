@@ -1,5 +1,4 @@
 import numpy as np
-import operator # do we need this?
 import statistics as s
 import sys
 from tqdm import tqdm
@@ -52,7 +51,7 @@ file_in = open(path_to_dumpfiles + name_dumpfile, 'r')
 
 # open the output files and print a header
 file_out = open(path_to_outfiles + name_outfile, 'w')  
-file_out.write("# Timesteps, No of clusters, Mean cluster size, Size largest cluster, No clusters size 1, No prot bound to poly, Fraction clusters bound to poly, No type 2 poly bound to prot\n")
+file_out.write("# Timesteps, No of clusters, Mean cluster size, Size largest cluster, No clusters size 1, No prot bound to poly, Fraction clusters bound to poly, No type 2 poly bound to prot, Mean no type 2 in prot cluster\n")
 
 file_cluster_sizes_out = open(path_to_outfiles + name_cluster_size_outfile, 'w')
 file_cluster_sizes_out.write("# Timesteps, List of cluster sizes\n")
@@ -78,8 +77,10 @@ for frame in tqdm(range(n_frames)):
     
     no_type_2_poly_bound, no_proteins_bound_to = no_type_2_poly_bound_to_prot(atoms)
 
+    mean_no_type_2_in_cluster = mean_no_type_2_poly_in_cluster(atoms, cluster_ids)
+
     # output results to files
-    file_out.write(f"{timesteps} {no_of_clusters} {mean_cluster_size:.5f} {largest_cluster_size} {size_1_clusters} {no_proteins_bound} {frac_clusters_bound:.5f} {no_type_2_poly_bound}\n")
+    file_out.write(f"{timesteps} {no_of_clusters} {mean_cluster_size:.5f} {largest_cluster_size} {size_1_clusters} {no_proteins_bound} {frac_clusters_bound:.5f} {no_type_2_poly_bound} {mean_no_type_2_in_cluster:.5f}\n")
     file_cluster_sizes_out.write(f"{timesteps}: {cluster_size}\n")
 
 # close the files

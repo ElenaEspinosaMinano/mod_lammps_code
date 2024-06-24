@@ -16,10 +16,22 @@ else:
     save_plots_to = '/home/s2205640/Documents/summer_project/mod_lammps_code/plots/hists/'
 
 
+def lines_in_file(filename):
+    """ Get the number of frames from lines in the file """
+
+    with open(path_to_trimmed_outfiles+filename) as f:
+        for i, l in enumerate(f):
+            pass
+
+    return i # don't add 1 as first line is the header 
+
+
 def count_cluster_sizes(cs_outfile_name):
 
     # initialise Counter object to keep track of cluster sizes in cs_outfile
     cluster_size_counter = Counter()
+
+    no_of_frames = lines_in_file(cs_outfile_name)
 
     with open(f"{path_to_trimmed_outfiles}{cs_outfile_name}", "r") as file:
         for line in file:
@@ -33,11 +45,11 @@ def count_cluster_sizes(cs_outfile_name):
             sizes_list = eval(sizes_str) # evaluate str representation of list into actual list obeject
 
             cluster_size_counter.update(sizes_list) # update counter with sizes list
-    
-    return cluster_size_counter
+
+    return cluster_size_counter, no_of_frames
 
 
-def get_counts_and_sizes(cluster_size_counter):
+def get_counts_and_sizes(cluster_size_counter, no_of_frames):
     
     # extract cluster sizes and number of counts from cluster_size_counter
     cluster_sizes = list(cluster_size_counter.keys())
@@ -48,7 +60,7 @@ def get_counts_and_sizes(cluster_size_counter):
     # gets value for key if in cluster_size_counter (ie. gets counts), if not it defaults that count to 0
     counts_list = [cluster_size_counter.get(size, 0) for size in sizes_list_step_1]
 
-    return sizes_list_step_1, counts_list
+    return sizes_list_step_1, (np.array(counts_list)/no_of_frames).tolist() # (np.array(counts_list)/no_of_frames).tolist()
 
 
 def plot_histogram_models_123(cs_list_step_1, counts_list, model, color):
@@ -66,7 +78,7 @@ def plot_histogram_models_123(cs_list_step_1, counts_list, model, color):
     plt.savefig(save_plots_to + f"cs_hist_plot_model_{model}_SS_run_1.png", dpi='figure')
     plt.show()
 
-
+"""
 def plot_histogram_model_4(cs_list_step_1, counts_list, model, color):
 
     plt.figure(figsize=(16, 10))
@@ -97,7 +109,7 @@ def plot_histogram_model_4_control(cs_list_step_1, counts_list, model, color):
 
     #plt.savefig(save_plots_to + f"cs_hist_plot_model_4_{model}_SS_run_1_control.png", dpi='figure')
     plt.show()
-
+"""
 
 def subplots_hist_model_4(cs_list_step_1, counts_list, cs_list_step_1_control, counts_list_control, model, color):
 
@@ -106,7 +118,6 @@ def subplots_hist_model_4(cs_list_step_1, counts_list, cs_list_step_1_control, c
     fig.supxlabel('Cluster sizes', fontsize ='16')
     fig.supylabel('Counts', fontsize ='16')
     fig.suptitle(f'Distribution of cluster sizes for Model 4 (left) and control (right) - protein attraction strength: {model} kBT', fontsize='16')
-    #fig.grid(True, alpha=0.5)
     
     left_bar_1 = axs[0].bar(cs_list_step_1, counts_list, color=color)
 
@@ -139,8 +150,8 @@ colors = prop_cycle.by_key()['color']
 trimmed_outfiles_cs_list_123 = [f'trimmed_outfile_cs_{i}_run_1.dat' for i in range(1, 4)]
 
 for i in range(1, 4):
-    model_i_cs_counter = count_cluster_sizes(trimmed_outfiles_cs_list_123[i-1])
-    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter)
+    model_i_cs_counter, no_of_frames_123 = count_cluster_sizes(trimmed_outfiles_cs_list_123[i-1])
+    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames_123)
     
     plot_histogram_models_123(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
 
@@ -154,10 +165,10 @@ trimmed_outfiles_cs_list_4 = [f'trimmed_outfile_cs_4_var_{i}_run_1.dat' for i in
 trimmed_outfiles_cs_list_4_control = [f'trimmed_outfile_cs_4_var_{i}_run_1_control.dat' for i in range(1, 9)]
 
 for i in range(1, 9):
-    model_i_cs_counter = count_cluster_sizes(trimmed_outfiles_cs_list_4[i-1])
-    model_i_cs_counter_control = count_cluster_sizes(trimmed_outfiles_cs_list_4_control[i-1])
+    model_i_cs_counter, no_of_frames_4 = count_cluster_sizes(trimmed_outfiles_cs_list_4[i-1])
+    model_i_cs_counter_control, no_of_frames_4_control = count_cluster_sizes(trimmed_outfiles_cs_list_4_control[i-1])
 
-    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter)
-    model_i_cs_list_step_1_control, model_i_counts_list_control = get_counts_and_sizes(model_i_cs_counter_control)
+    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames_4)
+    model_i_cs_list_step_1_control, model_i_counts_list_control = get_counts_and_sizes(model_i_cs_counter_control, no_of_frames_4_control)
 
     subplots_hist_model_4(model_i_cs_list_step_1, model_i_counts_list, model_i_cs_list_step_1_control, model_i_counts_list_control, i, colors[i-1])

@@ -216,7 +216,7 @@ def mean_no_type_2_poly_in_cluster(atoms, cluster_ids, target_poly_types={2}, th
     for j, cluster_id in enumerate(cluster_ids):
         
         # if cluster_id is not -2 (ie: it is the cluster id of a protein)
-        if cluster_id != -2:
+        if cluster_id != -2 and cluster_id not in no_type_2_poly_in:
 
             # find the atom indices of type 2 polymer beads that protein is bound to
             poly_beads_list = find_type_2_polymers_bound_to(j)
@@ -228,27 +228,8 @@ def mean_no_type_2_poly_in_cluster(atoms, cluster_ids, target_poly_types={2}, th
                     
                     # add to list of indices of type 2 polymers bound to proteins in cluster_id
                     poly_beads_list += find_type_2_polymers_bound_to(i) # note: there will be repeated indices in the list
-        
-        # remove duplicates from list + add to dictionary
-        no_type_2_poly_in[cluster_id] = len(set(poly_beads_list))
+            
+            # remove duplicates from list + add no of type 2 poly beads in that cluster to dictionary
+            no_type_2_poly_in[cluster_id] = len(set(poly_beads_list))
 
     return s.fmean(no_type_2_poly_in.values())
-
-
-
-"""
-    # loops through all atoms
-    for j, atom in enumerate(atoms):
-
-        # if atom is a protein (type 4)
-        if atom.type == 4:
-
-            # find the atom indices of type 2 polymer beads that protein is bound to
-            poly_beads_list = find_type_2_polymers_bound_to(j)
-
-            # find the rest of the proteins in the cluster that the protein is in
-            cluster_id = cluster_ids[j]
-            for i, cluster_id_i in enumerate(cluster_ids):
-                if cluster_id_i == cluster_id and i != j:
-                    poly_beads_list += find_type_2_polymers_bound_to(i)
-"""
