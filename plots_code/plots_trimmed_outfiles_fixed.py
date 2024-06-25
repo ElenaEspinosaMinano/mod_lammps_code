@@ -38,7 +38,7 @@ for i in range(1, 4):
     data_frames_123_trimmed[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_123[i-1], sep=' ', comment='#', header=None)
     data_frames_123_trimmed[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
                                         'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
-                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot']
+                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
 
 
 # get stats of models 123 for a particular dataframe and column + append it to a list
@@ -91,7 +91,7 @@ def plots_models_123(mean_123, std_123, sem_123, column_name, column_no):
     plt.show()
 
 
-# plots 1 to 7 for models 1, 2 and 3 - Mean ± 1 SEM (left) and STD (right)
+# plots 1 to 8 for models 1, 2 and 3 - Mean ± 1 SEM (left) and STD (right)
 
 
 mean_123_1, std_123_1, sem_123_1 = get_stats_123(data_frames_123_trimmed, 'No_of_clusters')
@@ -115,33 +115,52 @@ plots_models_123(mean_123_6, std_123_6, sem_123_6, 'Fraction of clusters bound t
 mean_123_7, std_123_7, sem_123_7 = get_stats_123(data_frames_123_trimmed, 'No_type_2_poly_bound_to_prot')
 plots_models_123(mean_123_7, std_123_7, sem_123_7, 'Number of type 2 polymers bound to proteins', 7)
 
+mean_123_8, std_123_8, sem_123_8 = get_stats_123(data_frames_123_trimmed, 'Mean_no_type_2_in_cluster')
+plots_models_123(mean_123_8, std_123_8, sem_123_8, 'Mean number of type 2 polymers per protein cluster', 8)
+
 
 
 ###
 #   Second investigation - Model 4 plots (normal + control)
 ###
 
-trimmed_outfiles_list_4 = [f'trimmed_outfile_4_var_{i}_run_1.dat' for i in range(1, 9)]
-trimmed_outfiles_list_4_control = [f'trimmed_outfile_4_var_{i}_run_1_control.dat' for i in range(1, 9)]
+trimmed_outfiles_list_4_run_1 = [f'trimmed_outfile_4_var_{i}_run_1.dat' for i in range(1, 9)]
+trimmed_outfiles_list_4_run_1_control = [f'trimmed_outfile_4_var_{i}_run_1_control.dat' for i in range(1, 9)]
+
+trimmed_outfiles_list_4_run_2 = [f'trimmed_outfile_4_var_{i}_run_2.dat' for i in range(1, 14)]
+trimmed_outfiles_list_4_run_2_control = [f'trimmed_outfile_4_var_{i}_run_2_control.dat' for i in range(1, 14)]
 
 # dictionary to store data frames
-data_frames_4_trimmed = {}
-data_frames_4_trimmed_control = {}
+data_frames_4_trimmed_run_1 = {}
+data_frames_4_trimmed_run_1_control = {}
+
+data_frames_4_trimmed_run_2 = {}
+data_frames_4_trimmed_run_2_control = {}
 
 # parse data
 for i in range(1, 9):
-    data_frames_4_trimmed[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_4[i-1], sep=' ', comment='#', header=None)
-    data_frames_4_trimmed[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
+    data_frames_4_trimmed_run_1[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_4_run_1[i-1], sep=' ', comment='#', header=None)
+    data_frames_4_trimmed_run_1[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
                                         'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
-                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot']
-    data_frames_4_trimmed_control[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_4_control[i-1], sep=' ', comment='#', header=None)
-    data_frames_4_trimmed_control[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
+                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
+    data_frames_4_trimmed_run_1_control[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_4_run_1_control[i-1], sep=' ', comment='#', header=None)
+    data_frames_4_trimmed_run_1_control[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
                                         'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
-                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot']
+                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
+
+for i in range(1, 14):
+    data_frames_4_trimmed_run_2[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_4_run_2[i-1], sep=' ', comment='#', header=None)
+    data_frames_4_trimmed_run_2[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
+                                        'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
+                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
+    data_frames_4_trimmed_run_2_control[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_4_run_2_control[i-1], sep=' ', comment='#', header=None)
+    data_frames_4_trimmed_run_2_control[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
+                                        'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
+                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
 
 
-# get stats of model 4 for a particular dataframe and column + append it to a list
-def get_stats_4(data_frames, column):
+# get stats of model 4 (run 1) for a particular dataframe and column + append it to a list
+def get_stats_4_run_1(data_frames, column):
     mean_list = []
     std_list = []
     sem_list = []
@@ -152,8 +171,21 @@ def get_stats_4(data_frames, column):
         sem_list.append(sem)
     return mean_list, std_list, sem_list
 
+# get stats of model 4 (run 2) for a particular dataframe and column + append it to a list
+def get_stats_4_run_2(data_frames, column):
+    mean_list = []
+    std_list = []
+    sem_list = []
+    for i in range(1, 14):
+        mean, std, sem = calc_stats(data_frames[i][column])
+        mean_list.append(mean)
+        std_list.append(std)
+        sem_list.append(sem)
+    return mean_list, std_list, sem_list
 
-pp_attraction = [1, 2, 3, 4, 5, 6, 7, 8]
+
+pp_attraction_run_1 = [1, 2, 3, 4, 5, 6, 7, 8]
+pp_attraction_run_2 = [0.3, 0.6, 0.9, 1.2, 1.5, 1.8, 2.1, 2.4, 2.7, 3.0, 3.3, 3.6, 3.9]
 
 
 def plots_model_4(mean_4, std_4, sem_4, mean_4_control, std_4_control, sem_4_control, column_name, column_no):
@@ -161,59 +193,101 @@ def plots_model_4(mean_4, std_4, sem_4, mean_4_control, std_4_control, sem_4_con
 
     fig.supxlabel('Protein-protein attraction strength (kBT)', fontsize ='16')
     fig.supylabel(f'{column_name}', fontsize ='16')
-    fig.suptitle(f'{column_name} vs. protein-protein attraction strength - Mean ± 1 SEM (left) and Control (right)', fontsize='16')
+    fig.suptitle(f'{column_name} vs. protein-protein attraction strength - Mean ± 1 SEM (left) and Control Mean ± 1 SEM (right)', fontsize='16')
 
-    left_bar_1 = axs[0].errorbar(pp_attraction, mean_4, yerr=sem_4, capsize=2, fmt='.r', alpha=0.7, ecolor='black')
+    left_bar_1 = axs[0].errorbar(pp_attraction_run_1, mean_4[0], yerr=sem_4[0], capsize=2, fmt='.r', alpha=0.7, ecolor='black', label='Run 1')
+    left_bar_2 = axs[0].errorbar(pp_attraction_run_2, mean_4[1], yerr=sem_4[1], capsize=2, fmt='.b', alpha=0.7, ecolor='black', label='Run 2')
 
-    axs[0].set_xticks(pp_attraction)
+    axs[0].set_xticks(pp_attraction_run_1)
     axs[0].tick_params(labelsize=14)
     axs[0].grid(True, alpha=0.5)
+    axs[0].legend(fontsize=14)
 
 
-    right_bar_1 = axs[1].errorbar(pp_attraction, mean_4_control, yerr=sem_4_control, capsize=2, fmt='.r', alpha=0.7, ecolor='black')
+    right_bar_1 = axs[1].errorbar(pp_attraction_run_1, mean_4_control[0], yerr=sem_4_control[0], capsize=2, fmt='.r', alpha=0.7, ecolor='black', label='Run 1')
+    right_bar_2 = axs[1].errorbar(pp_attraction_run_2, mean_4_control[1], yerr=sem_4_control[1], capsize=2, fmt='.b', alpha=0.7, ecolor='black', label='Run 2')
 
-    axs[1].set_xticks(pp_attraction)
+    axs[1].set_xticks(pp_attraction_run_1)
     axs[1].tick_params(labelsize=14)
     axs[1].grid(True, alpha=0.5)
+    axs[1].legend(fontsize=14)
 
     plt.savefig(save_plots_to + f"plot_{column_no}_model_4_SS_run_1.png", dpi='figure')
     plt.show()
 
 
-# plots 1 to 7 for model 4 - Mean ± 1 SEM (left) and Control (right)
+# plots 1 to 8 for model 4 - Mean ± 1 SEM (left) and Control (right)
 
 
-mean_4_1, std_4_1, sem_4_1 = get_stats_4(data_frames_4_trimmed, 'No_of_clusters')
-mean_4_1_control, std_4_1_control, sem_4_1_control = get_stats_4(data_frames_4_trimmed_control, 'No_of_clusters')
+mean_4_1_run_1, std_4_1_run_1, sem_4_1_run_1 = get_stats_4_run_1(data_frames_4_trimmed_run_1, 'No_of_clusters')
+mean_4_1_run_1_control, std_4_1_run_1_control, sem_4_1_run_1_control = get_stats_4_run_1(data_frames_4_trimmed_run_1_control, 'No_of_clusters')
+mean_4_1_run_2, std_4_1_run_2, sem_4_1_run_2 = get_stats_4_run_2(data_frames_4_trimmed_run_2, 'No_of_clusters')
+mean_4_1_run_2_control, std_4_1_run_2_control, sem_4_1_run_2_control = get_stats_4_run_2(data_frames_4_trimmed_run_2_control, 'No_of_clusters')
 
-plots_model_4(mean_4_1, std_4_1, sem_4_1, mean_4_1_control, std_4_1_control, sem_4_1_control, 'Number of clusters', 1)
+plots_model_4([mean_4_1_run_1, mean_4_1_run_2], [std_4_1_run_1, std_4_1_run_2], [sem_4_1_run_1, sem_4_1_run_2],
+             [mean_4_1_run_1_control, mean_4_1_run_2_control], [std_4_1_run_1_control, std_4_1_run_2_control], [sem_4_1_run_1_control, sem_4_1_run_2_control], 
+             'Number of clusters', 1)
 
-mean_4_2, std_4_2, sem_4_2 = get_stats_4(data_frames_4_trimmed, 'Mean_size_of_clusters')
-mean_4_2_control, std_4_2_control, sem_4_2_control = get_stats_4(data_frames_4_trimmed_control, 'Mean_size_of_clusters')
+mean_4_2_run_1, std_4_2_run_1, sem_4_2_run_1 = get_stats_4_run_1(data_frames_4_trimmed_run_1, 'Mean_size_of_clusters')
+mean_4_2_run_1_control, std_4_2_run_1_control, sem_4_2_run_1_control = get_stats_4_run_1(data_frames_4_trimmed_run_1_control, 'Mean_size_of_clusters')
+mean_4_2_run_2, std_4_2_run_2, sem_4_2_run_2 = get_stats_4_run_2(data_frames_4_trimmed_run_2, 'Mean_size_of_clusters')
+mean_4_2_run_2_control, std_4_2_run_2_control, sem_4_2_run_2_control = get_stats_4_run_2(data_frames_4_trimmed_run_2_control, 'Mean_size_of_clusters')
 
-plots_model_4(mean_4_2, std_4_2, sem_4_2, mean_4_2_control, std_4_2_control, sem_4_2_control, 'Mean size of clusters', 2)
+plots_model_4([mean_4_2_run_1, mean_4_2_run_2], [std_4_2_run_1, std_4_2_run_2], [sem_4_2_run_1, sem_4_2_run_2],
+             [mean_4_2_run_1_control, mean_4_2_run_2_control], [std_4_2_run_1_control, std_4_2_run_2_control], [sem_4_2_run_1_control, sem_4_2_run_2_control], 
+             'Mean size of clusters', 2)
 
-mean_4_3, std_4_3, sem_4_3 = get_stats_4(data_frames_4_trimmed, 'Size_of_largest_cluster')
-mean_4_3_control, std_4_3_control, sem_4_3_control = get_stats_4(data_frames_4_trimmed_control, 'Size_of_largest_cluster')
+mean_4_3_run_1, std_4_3_run_1, sem_4_3_run_1 = get_stats_4_run_1(data_frames_4_trimmed_run_1, 'Size_of_largest_cluster')
+mean_4_3_run_1_control, std_4_3_run_1_control, sem_4_3_run_1_control = get_stats_4_run_1(data_frames_4_trimmed_run_1_control, 'Size_of_largest_cluster')
+mean_4_3_run_2, std_4_3_run_2, sem_4_3_run_2 = get_stats_4_run_2(data_frames_4_trimmed_run_2, 'Size_of_largest_cluster')
+mean_4_3_run_2_control, std_4_3_run_2_control, sem_4_3_run_2_control = get_stats_4_run_2(data_frames_4_trimmed_run_2_control, 'Size_of_largest_cluster')
 
-plots_model_4(mean_4_3, std_4_3, sem_4_3, mean_4_3_control, std_4_3_control, sem_4_3_control, 'Size of largest cluster', 3)
+plots_model_4([mean_4_3_run_1, mean_4_3_run_2], [std_4_3_run_1, std_4_3_run_2], [sem_4_3_run_1, sem_4_3_run_2],
+             [mean_4_3_run_1_control, mean_4_3_run_2_control], [std_4_3_run_1_control, std_4_3_run_2_control], [sem_4_3_run_1_control, sem_4_3_run_2_control], 
+             'Size of largest cluster', 3)
 
-mean_4_4, std_4_4, sem_4_4 = get_stats_4(data_frames_4_trimmed, 'No_of_clusters_of_size_1')
-mean_4_4_control, std_4_4_control, sem_4_4_control = get_stats_4(data_frames_4_trimmed_control, 'No_of_clusters_of_size_1')
+mean_4_4_run_1, std_4_4_run_1, sem_4_4_run_1 = get_stats_4_run_1(data_frames_4_trimmed_run_1, 'No_of_clusters_of_size_1')
+mean_4_4_run_1_control, std_4_4_run_1_control, sem_4_4_run_1_control = get_stats_4_run_1(data_frames_4_trimmed_run_1_control, 'No_of_clusters_of_size_1')
+mean_4_4_run_2, std_4_4_run_2, sem_4_4_run_2 = get_stats_4_run_2(data_frames_4_trimmed_run_2, 'No_of_clusters_of_size_1')
+mean_4_4_run_2_control, std_4_4_run_2_control, sem_4_4_run_2_control = get_stats_4_run_2(data_frames_4_trimmed_run_2_control, 'No_of_clusters_of_size_1')
 
-plots_model_4(mean_4_4, std_4_4, sem_4_4, mean_4_4_control, std_4_4_control, sem_4_4_control, 'Number of clusters of size 1', 4)
+plots_model_4([mean_4_4_run_1, mean_4_4_run_2], [std_4_4_run_1, std_4_4_run_2], [sem_4_4_run_1, sem_4_4_run_2],
+             [mean_4_4_run_1_control, mean_4_4_run_2_control], [std_4_4_run_1_control, std_4_4_run_2_control], [sem_4_4_run_1_control, sem_4_4_run_2_control], 
+             'Number of clusters of size 1', 4)
 
-mean_4_5, std_4_5, sem_4_5 = get_stats_4(data_frames_4_trimmed, 'No_proteins_bound_to_poly')
-mean_4_5_control, std_4_5_control, sem_4_5_control = get_stats_4(data_frames_4_trimmed_control, 'No_proteins_bound_to_poly')
+mean_4_5_run_1, std_4_5_run_1, sem_4_5_run_1 = get_stats_4_run_1(data_frames_4_trimmed_run_1, 'No_proteins_bound_to_poly')
+mean_4_5_run_1_control, std_4_5_run_1_control, sem_4_5_run_1_control = get_stats_4_run_1(data_frames_4_trimmed_run_1_control, 'No_proteins_bound_to_poly')
+mean_4_5_run_2, std_4_5_run_2, sem_4_5_run_2 = get_stats_4_run_2(data_frames_4_trimmed_run_2, 'No_proteins_bound_to_poly')
+mean_4_5_run_2_control, std_4_5_run_2_control, sem_4_5_run_2_control = get_stats_4_run_2(data_frames_4_trimmed_run_2_control, 'No_proteins_bound_to_poly')
 
-plots_model_4(mean_4_5, std_4_5, sem_4_5, mean_4_5_control, std_4_5_control, sem_4_5_control, 'Number of proteins bound to polymer', 5)
+plots_model_4([mean_4_5_run_1, mean_4_5_run_2], [std_4_5_run_1, std_4_5_run_2], [sem_4_5_run_1, sem_4_5_run_2],
+             [mean_4_5_run_1_control, mean_4_5_run_2_control], [std_4_5_run_1_control, std_4_5_run_2_control], [sem_4_5_run_1_control, sem_4_5_run_2_control], 
+             'Number of proteins bound to polymer', 5)
 
-mean_4_6, std_4_6, sem_4_6 = get_stats_4(data_frames_4_trimmed, 'Fraction_clusters_bound_to_poly')
-mean_4_6_control, std_4_6_control, sem_4_6_control = get_stats_4(data_frames_4_trimmed_control, 'Fraction_clusters_bound_to_poly')
+mean_4_6_run_1, std_4_6_run_1, sem_4_6_run_1 = get_stats_4_run_1(data_frames_4_trimmed_run_1, 'Fraction_clusters_bound_to_poly')
+mean_4_6_run_1_control, std_4_6_run_1_control, sem_4_6_run_1_control = get_stats_4_run_1(data_frames_4_trimmed_run_1_control, 'Fraction_clusters_bound_to_poly')
+mean_4_6_run_2, std_4_6_run_2, sem_4_6_run_2 = get_stats_4_run_2(data_frames_4_trimmed_run_2, 'Fraction_clusters_bound_to_poly')
+mean_4_6_run_2_control, std_4_6_run_2_control, sem_4_6_run_2_control = get_stats_4_run_2(data_frames_4_trimmed_run_2_control, 'Fraction_clusters_bound_to_poly')
 
-plots_model_4(mean_4_6, std_4_6, sem_4_6, mean_4_6_control, std_4_6_control, sem_4_6_control, 'Fraction of clusters bound to polymer', 6)
+plots_model_4([mean_4_6_run_1, mean_4_6_run_2], [std_4_6_run_1, std_4_6_run_2], [sem_4_6_run_1, sem_4_6_run_2],
+             [mean_4_6_run_1_control, mean_4_6_run_2_control], [std_4_6_run_1_control, std_4_6_run_2_control], [sem_4_6_run_1_control, sem_4_6_run_2_control], 
+             'Fraction of clusters bound to polymer', 6)
 
-mean_4_7, std_4_7, sem_4_7 = get_stats_4(data_frames_4_trimmed, 'No_type_2_poly_bound_to_prot')
-mean_4_7_control, std_4_7_control, sem_4_7_control = get_stats_4(data_frames_4_trimmed_control, 'No_type_2_poly_bound_to_prot')
+mean_4_7_run_1, std_4_7_run_1, sem_4_7_run_1 = get_stats_4_run_1(data_frames_4_trimmed_run_1, 'No_type_2_poly_bound_to_prot')
+mean_4_7_run_1_control, std_4_7_run_1_control, sem_4_7_run_1_control = get_stats_4_run_1(data_frames_4_trimmed_run_1_control, 'No_type_2_poly_bound_to_prot')
+mean_4_7_run_2, std_4_7_run_2, sem_4_7_run_2 = get_stats_4_run_2(data_frames_4_trimmed_run_2, 'No_type_2_poly_bound_to_prot')
+mean_4_7_run_2_control, std_4_7_run_2_control, sem_4_7_run_2_control = get_stats_4_run_2(data_frames_4_trimmed_run_2_control, 'No_type_2_poly_bound_to_prot')
 
-plots_model_4(mean_4_7, std_4_7, sem_4_7, mean_4_7_control, std_4_7_control, sem_4_7_control, 'Number of type 2 polymers bound to proteins', 7)
+plots_model_4([mean_4_7_run_1, mean_4_7_run_2], [std_4_7_run_1, std_4_7_run_2], [sem_4_7_run_1, sem_4_7_run_2],
+             [mean_4_7_run_1_control, mean_4_7_run_2_control], [std_4_7_run_1_control, std_4_7_run_2_control], [sem_4_7_run_1_control, sem_4_7_run_2_control], 
+             'Number of type 2 polymers bound to proteins', 7)
+
+mean_4_8_run_1, std_4_8_run_1, sem_4_8_run_1 = get_stats_4_run_1(data_frames_4_trimmed_run_1, 'Mean_no_type_2_in_cluster')
+mean_4_8_run_1_control, std_4_8_run_1_control, sem_4_8_run_1_control = get_stats_4_run_1(data_frames_4_trimmed_run_1_control, 'Mean_no_type_2_in_cluster')
+mean_4_8_run_2, std_4_8_run_2, sem_4_8_run_2 = get_stats_4_run_2(data_frames_4_trimmed_run_2, 'Mean_no_type_2_in_cluster')
+mean_4_8_run_2_control, std_4_8_run_2_control, sem_4_8_run_2_control = get_stats_4_run_2(data_frames_4_trimmed_run_2_control, 'Mean_no_type_2_in_cluster')
+
+plots_model_4([mean_4_8_run_1, mean_4_8_run_2], [std_4_8_run_1, std_4_8_run_2], [sem_4_8_run_1, sem_4_8_run_2],
+             [mean_4_8_run_1_control, mean_4_8_run_2_control], [std_4_8_run_1_control, std_4_8_run_2_control], [sem_4_8_run_1_control, sem_4_8_run_2_control], 
+             'Mean number of type 2 polymers per protein cluster', 8)
+
