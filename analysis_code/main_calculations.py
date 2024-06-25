@@ -4,7 +4,7 @@ import sys
 from tqdm import tqdm
 
 from calculation_functions import (dbscan, size_of_clusters, mean_size_of_clusters, size_of_largest_cluster, no_of_clusters_size_1,
-                                    no_proteins_bound_to_poly, fraction_clusters_bound_to_poly, no_type_2_poly_bound_to_prot)
+                                    no_proteins_bound_to_poly, fraction_clusters_bound_to_poly, no_type_2_poly_bound_to_prot, mean_no_type_2_poly_in_cluster)
 from process_dump_file import Atom, readframe, lines_in_file
 
 ### main programs --> need to change stuff cause very sucky!
@@ -40,7 +40,7 @@ target_type = 4  # cluster target atom type
 n_atoms = 5300 # no of atoms
 n_poly_atoms = 5000 # no of polymer atoms
 
-path_to_dumpfiles = '../../lammps_sims/dumpfiles/' # need to change this when running on local computer
+path_to_dumpfiles = '/storage/cmstore01/groups/brackley/s2205640/dumpfiles/' # need to change this when running on local computer
 path_to_outfiles = '../outfiles/'
 
 n_lines = lines_in_file(path_to_dumpfiles + name_dumpfile) # no of lines in file
