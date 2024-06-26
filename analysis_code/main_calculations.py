@@ -37,7 +37,7 @@ name_outfile = input("Name of output file: ")
 threshold = 2.4 # cluster threshold - 2.4
 target_type = 4  # cluster target atom type
 
-n_atoms = 5300 # no of atoms
+n_atoms = 5600 # no of atoms - had to change this for models 567
 n_poly_atoms = 5000 # no of polymer atoms
 
 path_to_dumpfiles = '/storage/cmstore01/groups/brackley/s2205640/dumpfiles/' # need to change this when running on local computer
