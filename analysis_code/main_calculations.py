@@ -35,7 +35,7 @@ name_outfile = input("Name of output file: ")
 ########################
 
 threshold = 2.4 # cluster threshold - 2.4
-target_type = 4  # cluster target atom type
+target_types = {4, 5}  # cluster target atom type - 4 and 5 are proteins (on / off)
 
 n_atoms = 5600 # no of atoms - had to change this for models 567
 n_poly_atoms = 5000 # no of polymer atoms
@@ -66,7 +66,7 @@ for frame in tqdm(range(n_frames)):
         atoms[i].unwrap()
 
     # perform calculations + measurements on clusters
-    no_of_clusters, cluster_ids = dbscan(atoms, threshold, target_type)
+    no_of_clusters, cluster_ids = dbscan(atoms, threshold, target_types)
     cluster_size = size_of_clusters(cluster_ids)
     mean_cluster_size = mean_size_of_clusters(cluster_size)
     largest_cluster_size = size_of_largest_cluster(cluster_size)

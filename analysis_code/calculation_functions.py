@@ -2,8 +2,8 @@
 
 import statistics as s
 
-def dbscan(atoms, threshold, target_type):
-    """ Takes in a list of Atom objects, distance threshold + target type. 
+def dbscan(atoms, threshold, target_types):
+    """ Takes in a list of Atom objects, distance threshold + target types.
         Sets the cluster id for atoms we are not interested in to -2.
         Returns a list of cluster ids where the ith element is the cluster id for ith atom in input list """
 
@@ -18,20 +18,20 @@ def dbscan(atoms, threshold, target_type):
     def find_neighbors(atom_index):
         """ Takes in index of an atom and find the neighbours of that atom. 
             Atoms are neighbours if within threshold distance of 2.4.
-            Returns a list of neighbours of type=4 for atom index inputted """
+            Returns a list of neighbours of type=4, 5 for atom index inputted """
 
         return [i for i, other_atom in enumerate(atoms)
-                if i != atom_index and atoms[atom_index].type == target_type and other_atom.type == target_type and 
+                if i != atom_index and atoms[atom_index].type in target_types and other_atom.type in target_types and 
                 atoms[atom_index].sep_2(other_atom) < threshold_2]
     
     # loops through atoms list
     for i in range(len(atoms)):
 
         # checks to see if cluster id of ith atom is -1 - if not atom already processed
-        if cluster_ids[i] != -1 or atoms[i].type != target_type:
+        if cluster_ids[i] != -1 or atoms[i].type not in target_types:
 
             # checks to see if atom type is target type - if not sets cluster id of that atom to -2 (not of interest)
-            if atoms[i].type != target_type:
+            if atoms[i].type not in target_types:
                 cluster_ids[i] = -2
 
             continue
@@ -119,8 +119,8 @@ def no_proteins_bound_to_poly(atoms, target_types={1, 2, 3}, threshold_2=3.24):
     # loops through all atoms - could make it loop through just the last 300 as those are the proteins!
     for j, atom in enumerate(atoms):
 
-        # if atom is a protein (type 4)
-        if atom.type == 4:
+        # if atom is a protein (type 4 - ON or type 5 - OFF)
+        if atom.type == 4 or atom.type == 5:
 
             # find number of polymer beads (of any type - 1, 2 or 3) that protein is bound to
             poly_beads_list = find_polymers_bound_to(j)
@@ -163,7 +163,7 @@ def fraction_clusters_bound_to_poly(atoms, cluster_ids, no_of_clusters, target_t
     return fraction_bound
 
 
-def no_type_2_poly_bound_to_prot(atoms, target_types={4}, threshold_2=3.24):
+def no_type_2_poly_bound_to_prot(atoms, target_types={4, 5}, threshold_2=3.24):
     """ Takes in a list of Atom objects. 
         Returns the no of type 2 polymer bound to proteins + list of no of proteins that atom is bound to. """
 

@@ -5,7 +5,7 @@ import sys
 
 name_outfile = sys.argv[1] # name of outfile to trim - should be a COPY in trimmed_outfiles directory
 name_trimmed_outfile = sys.argv[2] # name of final trimmed outfile
-start_timestep = int(sys.argv[3]) # steady state starts from timestep - 1x10^6 (in model 1234 sims)
+start_timestep = int(sys.argv[3]) # steady state starts from timestep - 1x10^6 (in model 1234 sims) 3x10^6 (in model 567 sims)
 
 # specify path
 path_to_trimmed_outfiles = '../outfiles/trimmed_outfiles/'
