@@ -2,8 +2,8 @@
 
 import statistics as s
 
-def dbscan(atoms, threshold, target_types):
-    """ Takes in a list of Atom objects, distance threshold + target types.
+def dbscan(atoms, threshold, cluster_types):
+    """ Takes in a list of Atom objects, distance threshold + cluster types.
         Sets the cluster id for atoms we are not interested in to -2.
         Returns a list of cluster ids where the ith element is the cluster id for ith atom in input list """
 
@@ -21,17 +21,17 @@ def dbscan(atoms, threshold, target_types):
             Returns a list of neighbours of type=4, 5 for atom index inputted """
 
         return [i for i, other_atom in enumerate(atoms)
-                if i != atom_index and atoms[atom_index].type in target_types and other_atom.type in target_types and 
+                if i != atom_index and atoms[atom_index].type in cluster_types and other_atom.type in cluster_types and 
                 atoms[atom_index].sep_2(other_atom) < threshold_2]
     
     # loops through atoms list
     for i in range(len(atoms)):
 
         # checks to see if cluster id of ith atom is -1 - if not atom already processed
-        if cluster_ids[i] != -1 or atoms[i].type not in target_types:
+        if cluster_ids[i] != -1 or atoms[i].type not in cluster_types:
 
             # checks to see if atom type is target type - if not sets cluster id of that atom to -2 (not of interest)
-            if atoms[i].type not in target_types:
+            if atoms[i].type not in cluster_types:
                 cluster_ids[i] = -2
 
             continue
@@ -79,23 +79,25 @@ def size_of_clusters(cluster_ids):
 
 
 
-def mean_size_of_clusters(size_of_clusters):
-    """ Takes in list of cluster sizes (in number of proteins) and returns the mean number of proteins in a cluster """
+def clusters_greater_than_1(cluster_ids, size_of_clusters, no_of_clusters):
+    """ Takes in a list of cluster ids, the size of clusters and the no of clusters.
+        Returns the no of clusters of size 1, revised no of clusters (with more than 1 prot), the size of these clusters,
+        the overall mean size of clusters, the size of the largest cluster, sets cluster id of size 1 clusters to -2 
+        + returns new cluster ids. """
+
+    no_size_1_clusters = size_of_clusters.count(1)
+    no_of_clusters_v2 = no_of_clusters - no_size_1_clusters
+
+    for i, size in enumerate(size_of_clusters):
+        if size == 1:
+            cluster_ids[i] = -2
+
+    # list of cluster sizes greater than 1, mean of these revised cluster sizes, largest cluster size
+    cluster_sizes_v2 = [size for size in size_of_clusters if size > 1]
+    mean_cluster_size_v2 = s.fmean(cluster_sizes_v2) # fmean runs faster than mean apparently
+    largest_cluster_size = max(cluster_sizes_v2)
     
-    return s.fmean(size_of_clusters) # fmean runs faster than mean apparently
-
-
-
-def size_of_largest_cluster(size_of_clusters):
-    """ Takes in list of cluster sizes and returns the number of proteins in largest cluster """
-    
-    return max(size_of_clusters)
-
-
-def no_of_clusters_size_1(size_of_clusters):
-    """ Takes in a list of cluster sizes and returns the number of clusters with only 1 protein - i.e. size 1 """
-
-    return size_of_clusters.count(1)
+    return no_size_1_clusters, no_of_clusters_v2, cluster_sizes_v2, mean_cluster_size_v2, largest_cluster_size, cluster_ids
 
 
 def no_proteins_bound_to_poly(atoms, target_types={1, 2, 3}, threshold_2=3.24):
@@ -133,8 +135,9 @@ def no_proteins_bound_to_poly(atoms, target_types={1, 2, 3}, threshold_2=3.24):
     return no_proteins_bound, no_polymers_bound_to
 
 
-def fraction_clusters_bound_to_poly(atoms, cluster_ids, no_of_clusters, target_types={1, 2, 3}, threshold_2=3.24):
-    """ Takes in a list of Atom objects, their cluster ids and no_of_clusters (at each frame). 
+
+def fraction_clusters_bound_to_poly(atoms, cluster_ids_v2, no_of_clusters_v2, target_types={1, 2, 3}, threshold_2=3.24):
+    """ Takes in a list of Atom objects, their cluster ids v2 and no_of_clusters_v2 (at each frame). 
         Returns the fraction of clusters bound to the polymer of type=1, 2 or 3 """
 
     def protein_bound_to_poly(j):
@@ -149,18 +152,19 @@ def fraction_clusters_bound_to_poly(atoms, cluster_ids, no_of_clusters, target_t
     bound_clusters = []  # list of cluster ids of bound clusters
     
     # loop through all cluster ids
-    for j, cluster_id in enumerate(cluster_ids):
+    for j, cluster_id in enumerate(cluster_ids_v2):
 
-        # if cluster_id is not -2 (ie: it is the cluster id of a protein) and it is not already in bound_clusters
+        # if cluster_id is not -2 (ie: it is the cluster id of a protein + cluster > 1) and not already in bound_clusters
         if cluster_id != -2 and cluster_id not in bound_clusters:
 
             # check if the protein belonging to that cluster id is bound to a polymer bead. If yes, add to bound_clusters list.
             if protein_bound_to_poly(j):
                 bound_clusters.append(cluster_id)
 
-    fraction_bound = len(bound_clusters) / no_of_clusters # no of bound clusters / total no of clusters
+    fraction_bound = len(bound_clusters) / no_of_clusters_v2 # no of bound clusters / total no of clusters > 1
 
     return fraction_bound
+
 
 
 def no_type_2_poly_bound_to_prot(atoms, target_types={4, 5}, threshold_2=3.24):
@@ -197,8 +201,9 @@ def no_type_2_poly_bound_to_prot(atoms, target_types={4, 5}, threshold_2=3.24):
     return no_type_2_poly_bound, no_proteins_bound_to
 
 
-def mean_no_type_2_poly_in_cluster(atoms, cluster_ids, target_poly_types={2}, threshold_2=3.24):
-    """ Takes in a list of Atom objects and cluster_ids.
+
+def mean_no_type_2_poly_in_cluster(atoms, cluster_ids_v2, target_poly_types={2}, threshold_2=3.24):
+    """ Takes in a list of Atom objects and cluster_ids_v2.
         Returns the mean number of type 2 polymers bound to proteins in a cluster """
 
     def find_type_2_polymers_bound_to(j):
@@ -212,17 +217,17 @@ def mean_no_type_2_poly_in_cluster(atoms, cluster_ids, target_poly_types={2}, th
 
     no_type_2_poly_in = {} # dictionary of cluster ids to no of type 2 polymers in that cluster id
 
-    # loop through all cluster ids
-    for j, cluster_id in enumerate(cluster_ids):
+    # loop through all cluster ids v2
+    for j, cluster_id in enumerate(cluster_ids_v2):
         
-        # if cluster_id is not -2 (ie: it is the cluster id of a protein)
+        # if cluster_id is not -2 (ie: cluster id of a protein + cluster > 1) and not already in no_type_2_poly_in dictionary
         if cluster_id != -2 and cluster_id not in no_type_2_poly_in:
 
             # find the atom indices of type 2 polymer beads that protein is bound to
             poly_beads_list = find_type_2_polymers_bound_to(j)
 
             # find the rest of the proteins in the cluster that the protein is in
-            for i, cluster_id_i in enumerate(cluster_ids):
+            for i, cluster_id_i in enumerate(cluster_ids_v2):
 
                 if cluster_id_i == cluster_id and i != j:
                     

@@ -1,5 +1,5 @@
 #!/bin/bash
-# bash script for obtaining outfiles and cs outfiles for all dump files
+# bash script for obtaining outfiles and cs outfiles for dump files of models 1, 2, 3, 4
 
 # loop for range 1 to 3 - Models 1, 2 + 3
 for i in {1..3}

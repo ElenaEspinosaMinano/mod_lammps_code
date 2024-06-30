@@ -1,7 +1,6 @@
 ### Atom class + readframe + lines_in_file functions - used to process dump files
 
 import numpy as np
-import operator # do we need this?
 
 class Atom:
     """ A Class for storing atom information """
