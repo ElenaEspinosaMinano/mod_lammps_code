@@ -88,16 +88,18 @@ def clusters_greater_than_1(cluster_ids, size_of_clusters, no_of_clusters):
     no_size_1_clusters = size_of_clusters.count(1)
     no_of_clusters_v2 = no_of_clusters - no_size_1_clusters
 
+    cluster_ids_v2 = cluster_ids # make a v2 of cluster ids, setting the cluster id of size 1 clusters to -2
+
     for i, size in enumerate(size_of_clusters):
         if size == 1:
-            cluster_ids[i] = -2
+            cluster_ids_v2[i] = -2
 
     # list of cluster sizes greater than 1, mean of these revised cluster sizes, largest cluster size
     cluster_sizes_v2 = [size for size in size_of_clusters if size > 1]
     mean_cluster_size_v2 = s.fmean(cluster_sizes_v2) # fmean runs faster than mean apparently
     largest_cluster_size = max(cluster_sizes_v2)
     
-    return no_size_1_clusters, no_of_clusters_v2, cluster_sizes_v2, mean_cluster_size_v2, largest_cluster_size, cluster_ids
+    return no_size_1_clusters, no_of_clusters_v2, cluster_sizes_v2, largest_cluster_size, cluster_ids_v2, mean_cluster_size_v2
 
 
 def no_proteins_bound_to_poly(atoms, target_types={1, 2, 3}, threshold_2=3.24):

@@ -3,8 +3,8 @@ import statistics as s
 import sys
 from tqdm import tqdm
 
-from calculation_functions import (dbscan, size_of_clusters, mean_size_of_clusters, size_of_largest_cluster, no_of_clusters_size_1,
-                                    no_proteins_bound_to_poly, fraction_clusters_bound_to_poly, no_type_2_poly_bound_to_prot, mean_no_type_2_poly_in_cluster)
+from calculation_functions import (dbscan, size_of_clusters, clusters_greater_than_1, no_proteins_bound_to_poly, 
+                                    fraction_clusters_bound_to_poly, no_type_2_poly_bound_to_prot, mean_no_type_2_poly_in_cluster)
 from process_dump_file import Atom, readframe, lines_in_file
 
 ### main programs --> need to change stuff cause very sucky!
