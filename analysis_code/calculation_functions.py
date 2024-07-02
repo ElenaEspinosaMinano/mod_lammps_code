@@ -68,12 +68,12 @@ def size_of_clusters(cluster_ids):
     size_of_clusters = [0] * max(cluster_ids) # 0 means 0 atoms in cluster i
     
     # loop through list of cluster ids
-    for i in cluster_ids:
+    for cluster_id in cluster_ids:
         
         # if the cluster id is not -2 (-2 are atoms of non-interest)
-        if i != -2:
+        if cluster_id != -2:
             # increase value of i-1 by 1
-            size_of_clusters[i-1] += 1
+            size_of_clusters[cluster_id-1] += 1
                     
     return size_of_clusters
 
@@ -90,9 +90,10 @@ def clusters_greater_than_1(cluster_ids, size_of_clusters, no_of_clusters):
 
     cluster_ids_v2 = cluster_ids # make a v2 of cluster ids, setting the cluster id of size 1 clusters to -2
 
-    for i, size in enumerate(size_of_clusters):
-        if size == 1:
-            cluster_ids_v2[i] = -2
+    for i, cluster_id in enumerate(cluster_ids):
+        if cluster_id != -2:
+            if size_of_clusters[cluster_id - 1] == 1:
+                cluster_ids_v2[i] = -2
 
     # list of cluster sizes greater than 1, mean of these revised cluster sizes, largest cluster size
     cluster_sizes_v2 = [size for size in size_of_clusters if size > 1]
@@ -156,7 +157,7 @@ def fraction_clusters_bound_to_poly(atoms, cluster_ids_v2, no_of_clusters_v2, ta
     # loop through all cluster ids
     for j, cluster_id in enumerate(cluster_ids_v2):
 
-        # if cluster_id is not -2 (ie: it is the cluster id of a protein + cluster > 1) and not already in bound_clusters
+        # if cluster_id is not -2 (ie: it is the cluster id of a protein in cluster > 1) and not already in bound_clusters
         if cluster_id != -2 and cluster_id not in bound_clusters:
 
             # check if the protein belonging to that cluster id is bound to a polymer bead. If yes, add to bound_clusters list.

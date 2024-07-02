@@ -70,11 +70,7 @@ for frame in tqdm(range(n_frames)):
     cluster_sizes = size_of_clusters(cluster_ids)
 
     no_size_1_clusters, no_of_clusters_v2, cluster_sizes_v2, largest_cluster_size, cluster_ids_v2, mean_cluster_size_v2 = clusters_greater_than_1(cluster_ids, cluster_sizes, no_of_clusters)
-    """
-    mean_cluster_size = mean_size_of_clusters(cluster_size)
-    largest_cluster_size = size_of_largest_cluster(cluster_size)
-    no_size_1_clusters = no_of_clusters_size_1(cluster_size)
-    """
+
     no_proteins_bound, no_polymers_bound_to = no_proteins_bound_to_poly(atoms)
     frac_clusters_bound = fraction_clusters_bound_to_poly(atoms, cluster_ids_v2, no_of_clusters_v2)
     
