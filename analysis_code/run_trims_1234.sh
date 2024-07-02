@@ -1,5 +1,5 @@
 #!/bin/bash
-# bash script for trimming outfiles and cs outfiles of all dump files
+# bash script for trimming outfiles and cs outfiles of dump files models 1234
 
 # loop for range 1 to 3 - Models 1, 2 + 3
 for i in {1..3}

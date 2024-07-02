@@ -72,10 +72,10 @@ def plot_histogram_models_123(cs_list_step_1, counts_list, model, color):
     plt.xlabel('Cluster sizes')
     plt.ylabel('Counts')
     plt.title(f'Distribution of cluster sizes for Model {model} - fixed')
-    plt.xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # Ensure each cluster size is a tick on the x-axis
+    plt.xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # ensure each cluster size is a tick on the x-axis
     plt.grid(True, alpha=0.5)
 
-    plt.savefig(save_plots_to + f"cs_hist_plot_model_{model}_SS_run_1_5.png", dpi='figure') # change this to _5 for last calc.
+    plt.savefig(save_plots_to + f"cs_hist_plot_model_{model}_SS_run_1_v2.png", dpi='figure')
     plt.show()
 
 """
@@ -187,8 +187,8 @@ for i in range(1, 4):
     model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames_567)
     
     plot_histogram_models_123(model_i_cs_list_step_1, model_i_counts_list, (i+4), colors[i-1])
-"""
 
+### for proteins being type 4 + 5
 
 trimmed_outfiles_cs_list_567_5 = [f'trimmed_outfile_cs_{i}_run_1_5.dat' for i in range(5, 8)]
 
@@ -196,5 +196,19 @@ trimmed_outfiles_cs_list_567_5 = [f'trimmed_outfile_cs_{i}_run_1_5.dat' for i in
 for i in range(1, 4):
     model_i_cs_counter, no_of_frames_567_5 = count_cluster_sizes(trimmed_outfiles_cs_list_567_5[i-1])
     model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames_567_5)
+    
+    plot_histogram_models_123(model_i_cs_list_step_1, model_i_counts_list, (i+4), colors[i-1])
+"""
+
+###
+#   Third investigation - Models 5, 6, 7 + 8 histrogram plots of steady state cluster sizes
+###
+
+trimmed_outfiles_cs_list_5678_v2 = [f'trimmed_outfile_cs_{i}_run_1_v2.dat' for i in range(5, 9)]
+
+# parse data
+for i in range(1, 5):
+    model_i_cs_counter, no_of_frames_5678_v2 = count_cluster_sizes(trimmed_outfiles_cs_list_5678_v2[i-1])
+    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames_5678_v2)
     
     plot_histogram_models_123(model_i_cs_list_step_1, model_i_counts_list, (i+4), colors[i-1])
