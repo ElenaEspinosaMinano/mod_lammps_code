@@ -109,6 +109,7 @@ for i, column in enumerate(column_name):
 """
 
 
+
 # trimmed outfile SS plots
 
 trimmed_outfiles_list_567_v2 = [f'trimmed_outfile_{i}_run_3_v2.dat' for i in range(5, 9)]
@@ -161,6 +162,7 @@ for i, column in enumerate(column_name):
 """
 
 
+
 # trimmed outfiles hist plots
 
 def lines_in_file(filename):
@@ -172,7 +174,7 @@ def lines_in_file(filename):
 
     return i # don't add 1 as first line is the header 
 
-
+"""
 def count_cluster_sizes(cs_outfile_name):
 
     # initialise Counter object to keep track of cluster sizes in cs_outfile
@@ -192,6 +194,35 @@ def count_cluster_sizes(cs_outfile_name):
             sizes_list = eval(sizes_str) # evaluate str representation of list into actual list obeject
 
             cluster_size_counter.update(sizes_list) # update counter with sizes list
+
+    return cluster_size_counter, no_of_frames
+"""
+
+def count_cluster_sizes(cs_outfile_name, line_no=None):
+    
+    # initialise Counter object to keep track of cluster sizes in cs_outfile
+    cluster_size_counter = Counter()
+
+    with open(f"{path_to_trimmed_outfiles}{cs_outfile_name}", "r") as file:
+        for i, line in enumerate(file):
+
+            if line.strip() == "" or line.startswith("#"): # skip empty lines and comments
+                continue
+
+            if line_no is not None and i != line_no: # skip lines in file which are not line_no = i
+                continue
+
+            _, sizes_str = line.split(":") # extract cluster sizes part after the colon 
+            sizes_str = sizes_str.strip() # strip leading/trailing whitespace
+
+            sizes_list = eval(sizes_str) # evaluate str representation of list into actual list object
+
+            cluster_size_counter.update(sizes_list)  # update counter with sizes list
+
+            if line_no is not None and i == line_no:
+                break
+
+    no_of_frames = 1 if line_no is not None else lines_in_file(cs_outfile_name)
 
     return cluster_size_counter, no_of_frames
 
@@ -226,6 +257,22 @@ def plot_histogram_models_5678(cs_list_step_1, counts_list, model, color):
     plt.show()
 
 
+def plot_histogram_model_7(cs_list_step_1, counts_list, model, color):
+
+    plt.figure(figsize=(16, 10))
+    
+    plt.bar(cs_list_step_1, counts_list, color=color)
+
+    plt.xlabel('Cluster sizes')
+    plt.ylabel('Counts')
+    plt.title(f'Distribution of cluster sizes for Model 7 at a single timestep')
+    plt.xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # ensure each cluster size is a tick on the x-axis
+    plt.grid(True, alpha=0.5)
+
+    #plt.savefig(save_plots_to_hists + f"cs_hist_plot_model_7_SS_timestep_run_3_v2.png", dpi='figure')
+    plt.show()
+
+
 trimmed_outfiles_cs_list_5678_v2 = [f'trimmed_outfile_cs_{i}_run_3_v2.dat' for i in range(5, 9)]
 """
 # parse data
@@ -235,6 +282,18 @@ for i in range(1, 5):
     
     plot_histogram_models_5678(model_i_cs_list_step_1, model_i_counts_list, (i+4), colors[i-1])
 """
+
+
+# trimmed outfile hist plot model 7 single timestep
+
+# Plot data for a specific time step (e.g., time step 2)
+line_no = 1401  # specify the line no in cs outfile you want to plot - no 1401 is the last time step can use this to check results in vmd
+
+model_7_cs_counter, no_of_frames_7_v2 = count_cluster_sizes(trimmed_outfiles_cs_list_5678_v2[2], line_no)
+model_7_cs_list_step_1, model_7_counts_list = get_counts_and_sizes(model_7_cs_counter, no_of_frames_7_v2)
+
+plot_histogram_model_7(model_7_cs_list_step_1, model_7_counts_list, colors[2])
+
 
 
 # trimmed outfile plots for Model 7 with varying switching rate
@@ -317,11 +376,13 @@ for i, column in enumerate(column_name):
 """
 
 
+
 # trimmed outfile SS plot model 0
 
 models_05678 = ('Model 0', 'Model 5', 'Model 6', 'Model 7', 'Model 8')
+x_pos_05678 = np.arange(len(models_05678))
 
-trimmed_outfiles_list_05678_v2 = ['trimmed_outfile_0_run_1_v2.dat', f'trimmed_outfile_{i}_run_3_v2.dat' for i in range(5, 9)]
+trimmed_outfiles_list_05678_v2 = ['trimmed_outfile_0_run_1_v2.dat'] + [f'trimmed_outfile_{i}_run_3_v2.dat' for i in range(5, 9)]
 
 # dictionary to store data frames
 data_frames_05678_trimmed_v2 = {}
@@ -344,22 +405,22 @@ def SS_plots_models_05678(mean_05678, std_05678, sem_05678, column_name, column_
     fig.supylabel(column_name, fontsize ='16')
     fig.suptitle(f'{column_name} for different models - Mean ± 1 SEM (left) and STD (right) - fixed', fontsize='16')
 
-    left_bar = axs[0].bar(models_05678, mean_05678, yerr=sem_05678, capsize=2, label=bar_labels_mean, color=colors[:4])
+    left_bar = axs[0].bar(models_05678, mean_05678, yerr=sem_05678, capsize=2, label=bar_labels_mean, color=['k']+colors[:4])
 
-    axs[0].set_xticks(x_pos)
+    axs[0].set_xticks(x_pos_05678)
     axs[0].tick_params(labelsize=14)
     axs[0].legend(fontsize=14)
     axs[0].grid(True, alpha=0.5)
 
 
-    right_bar = axs[1].bar(models_05678, std_05678, label=bar_labels_std, color=colors[:4])
+    right_bar = axs[1].bar(models_05678, std_05678, label=bar_labels_std, color=['k']+colors[:4])
 
-    axs[1].set_xticks(x_pos)
+    axs[1].set_xticks(x_pos_05678)
     axs[1].tick_params(labelsize=14)
     axs[1].legend(fontsize=14)
     axs[1].grid(True, alpha=0.5)
 
-    #plt.savefig(save_plots_to_SS + f"plot_{column_no}_model_5678_SS_run_3_v2.png", dpi='figure')
+    plt.savefig(save_plots_to_SS + f"plot_{column_no}_model_05678_SS_run_3_v2.png", dpi='figure')
     plt.show()
 
 
@@ -376,7 +437,8 @@ def get_stats_05678(data_frames, column):
 
 
 # steady state plots 1 to 8 for models 0, 5, 6, 7 + 8 - Mean ± 1 SEM (left) and STD (right) - proteins being type 4 + 5
-
+"""
 for i, column in enumerate(column_name):
     mean_05678, std_05678, sem_05678 = get_stats_05678(data_frames_05678_trimmed_v2, data_frame_name[i])
     SS_plots_models_05678(mean_05678, std_05678, sem_05678, column_name[i], (i+1))
+"""
