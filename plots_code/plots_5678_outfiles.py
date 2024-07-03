@@ -472,10 +472,10 @@ def full_plots_5678_var_nop(data_frame_name, column_name, column_no):
 
     for i in range(1, 5):
 
-        plt.plot(data_frames_5678_var_nop_v2[1]['Timesteps'], data_frames_5678_var_nop_v2[1][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 300 proteins')
-        plt.plot(data_frames_5678_var_nop_v2[2]['Timesteps'], data_frames_5678_var_nop_v2[2][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 400 proteins')
-        plt.plot(data_frames_5678_var_nop_v2[3]['Timesteps'], data_frames_5678_var_nop_v2[3][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 500 proteins')
-        plt.plot(data_frames_5678_var_nop_v2[4]['Timesteps'], data_frames_5678_var_nop_v2[4][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 600 proteins')
+        plt.plot(data_frames_5678_var_nop_v2[i*1]['Timesteps'], data_frames_5678_var_nop_v2[i*1][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 300 proteins')
+        plt.plot(data_frames_5678_var_nop_v2[i*2]['Timesteps'], data_frames_5678_var_nop_v2[i*2][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 400 proteins')
+        plt.plot(data_frames_5678_var_nop_v2[i*3]['Timesteps'], data_frames_5678_var_nop_v2[i*3][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 500 proteins')
+        plt.plot(data_frames_5678_var_nop_v2[i*4]['Timesteps'], data_frames_5678_var_nop_v2[i*4][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 600 proteins')
 
     plt.xlabel('Timesteps', fontsize ='16')
     plt.xticks(fontsize='14')
@@ -492,6 +492,56 @@ def full_plots_5678_var_nop(data_frame_name, column_name, column_no):
     #plt.savefig(save_plots_to + f"plot_{column_no}_model_5678_run_3_v2.png", dpi='figure')
     plt.show()
 
-
+"""
 for i, column in enumerate(column_name):
     full_plots_5678_var_nop(data_frame_name[i], column_name[i], (i+1))
+"""
+
+
+
+# trimmed outfile plots for models 5678 with varying no of proteins
+
+def get_stats_5678_nop(data_frames, column):
+    mean_list = []
+    std_list = []
+    sem_list = []
+    for i in range(1, 17):
+        mean, std, sem = calc_stats(data_frames[i][column])
+        mean_list.append(mean)
+        std_list.append(std)
+        sem_list.append(sem)
+    return mean_list, std_list, sem_list
+
+
+nop = [300, 400, 500, 600]
+
+
+def plots_models_5678_var_nop(means, stds, sems, column_name, column_no):
+
+    plt.figure(figsize=(16, 10))
+    
+    for i in range(0, 4):
+
+        plt.errorbar(nop, means[i*4:(i+1)*4], yerr=sems[i*4:(i+1)*4], capsize=2, fmt='.-', alpha=0.7, ecolor='black', label=f'Model {i+5}', color=colors[i])
+    
+    plt.xlabel('No of proteins', fontsize ='16')
+    plt.ylabel(f'{column_name}', fontsize ='16')
+    plt.title(f'{column_name} vs. no of proteins', fontsize ='16')
+    
+    plt.xticks(nop)  # ensure each cluster size is a tick on the x-axis
+    plt.grid(True, alpha=0.5)
+
+    plt.tick_params('both', labelsize=14)
+    plt.legend(fontsize="14")
+    plt.savefig(save_plots_to_SS + f"plot_{column_no}_models_5678_SS_var_nop_run_3_v2.png", dpi='figure')
+    plt.show()
+
+
+# plots 1 to 8 for models 5678 with varying no of proteins
+"""
+for i, column in enumerate(column_name):
+    means, stds, sems = get_stats_5678_nop(data_frames_5678_var_nop_v2, data_frame_name[i])
+    plots_models_5678_var_nop(means, stds, sems, column_name[i], (i+1))
+"""
+
+
