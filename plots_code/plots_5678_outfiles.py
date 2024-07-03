@@ -45,6 +45,19 @@ def get_stats_5678(data_frames, column):
     return mean_list, std_list, sem_list
 
 
+def get_stats_05678(data_frames, column):
+    mean_list = []
+    std_list = []
+    sem_list = []
+    for i in range(1, 6):
+        mean, std, sem = calc_stats(data_frames[i][column])
+        mean_list.append(mean)
+        std_list.append(std)
+        sem_list.append(sem)
+    return mean_list, std_list, sem_list
+
+
+
 ###
 #   Third investigation - Model 5, 6, 7 + 8 plots - proteins being type 4+5 and clusters defined as > 1 protein
 ###
@@ -64,8 +77,12 @@ data_frame_name = ['No_of_clusters', 'Mean_size_of_clusters',
 x_pos = np.arange(len(models))
 
 
+models_05678 = (0, 5, 6, 7, 8)
+x_pos_05678 = np.arange(len(models_05678))
 
-# full outfile plots
+
+
+# full outfile plots for models 5678
 
 outfiles_list_567_v2 = [f'outfile_{i}_run_3_v2.dat' for i in range(5, 9)]
 
@@ -241,58 +258,62 @@ def get_counts_and_sizes(cluster_size_counter, no_of_frames):
     return sizes_list_step_1, (np.array(counts_list)/no_of_frames).tolist() # (np.array(counts_list)/no_of_frames).tolist()
 
 
-def plot_histogram_models_5678(cs_list_step_1, counts_list, model, color):
+def plot_histogram_models_05678(cs_list_step_1, counts_list, model, color):
 
     plt.figure(figsize=(16, 10))
     
     plt.bar(cs_list_step_1, counts_list, color=color)
 
-    plt.xlabel('Cluster sizes')
-    plt.ylabel('Counts')
-    plt.title(f'Distribution of cluster sizes for Model {model}')
+    plt.xlabel('Cluster sizes', fontsize ='16')
+    plt.ylabel('Counts', fontsize ='16')
+    plt.title(f'Distribution of cluster sizes for Model {model}', fontsize ='16')
+
     plt.xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # ensure each cluster size is a tick on the x-axis
     plt.grid(True, alpha=0.5)
 
+    plt.tick_params('both', labelsize=14)
     plt.savefig(save_plots_to_hists + f"cs_hist_plot_model_{model}_SS_run_3_v2.png", dpi='figure')
     plt.show()
 
 
-def plot_histogram_model_7(cs_list_step_1, counts_list, model, color):
+def plot_histogram_model_7(cs_list_step_1, counts_list, color):
 
     plt.figure(figsize=(16, 10))
     
     plt.bar(cs_list_step_1, counts_list, color=color)
 
-    plt.xlabel('Cluster sizes')
-    plt.ylabel('Counts')
-    plt.title(f'Distribution of cluster sizes for Model 7 at a single timestep')
+    plt.xlabel('Cluster sizes', fontsize ='16')
+    plt.ylabel('Counts', fontsize ='16')
+    plt.title(f'Distribution of cluster sizes for Model 7 at a single timestep', fontsize ='16')
+    
     plt.xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # ensure each cluster size is a tick on the x-axis
     plt.grid(True, alpha=0.5)
-
-    #plt.savefig(save_plots_to_hists + f"cs_hist_plot_model_7_SS_timestep_run_3_v2.png", dpi='figure')
+    
+    plt.tick_params('both', labelsize=14)
+    plt.savefig(save_plots_to_hists + f"cs_hist_plot_model_7_SS_timestep_run_3_v2.png", dpi='figure')
     plt.show()
 
 
-trimmed_outfiles_cs_list_5678_v2 = [f'trimmed_outfile_cs_{i}_run_3_v2.dat' for i in range(5, 9)]
+trimmed_outfiles_cs_list_05678_v2 = ['trimmed_outfile_cs_0_run_1_v2.dat'] + [f'trimmed_outfile_cs_{i}_run_3_v2.dat' for i in range(5, 9)]
 """
 # parse data
-for i in range(1, 5):
-    model_i_cs_counter, no_of_frames_5678_v2 = count_cluster_sizes(trimmed_outfiles_cs_list_5678_v2[i-1])
-    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames_5678_v2)
+for i in range(1, 6):
+    model_i_cs_counter, no_of_frames_05678_v2 = count_cluster_sizes(trimmed_outfiles_cs_list_05678_v2[i-1])
+    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames_05678_v2)
     
-    plot_histogram_models_5678(model_i_cs_list_step_1, model_i_counts_list, (i+4), colors[i-1])
+    plot_histogram_models_05678(model_i_cs_list_step_1, model_i_counts_list, models_05678[i-1], colors[i-1])
 """
 
 
 # trimmed outfile hist plot model 7 single timestep
-
-# Plot data for a specific time step (e.g., time step 2)
+"""
 line_no = 1401  # specify the line no in cs outfile you want to plot - no 1401 is the last time step can use this to check results in vmd
 
 model_7_cs_counter, no_of_frames_7_v2 = count_cluster_sizes(trimmed_outfiles_cs_list_5678_v2[2], line_no)
 model_7_cs_list_step_1, model_7_counts_list = get_counts_and_sizes(model_7_cs_counter, no_of_frames_7_v2)
 
 plot_histogram_model_7(model_7_cs_list_step_1, model_7_counts_list, colors[2])
+"""
 
 
 
@@ -357,18 +378,19 @@ def plots_model_7_sw(mean_7_sw, std_7_sw, sem_7_sw, column_name, column_no):
     
     plt.errorbar(tau_sw, mean_7_sw, yerr=sem_7_sw, capsize=2, fmt='.r', alpha=0.7, ecolor='black')
 
-    plt.xlabel('Switching interval (time units)')
+    plt.xlabel('Switching interval (time units)', fontsize ='16')
     plt.ylabel(f'{column_name}', fontsize ='16')
-    plt.title(f'{column_name} vs. switching interval (time units)')
+    plt.title(f'{column_name} vs. switching interval (time units)', fontsize ='16')
     
     plt.xticks(tau_sw)  # ensure each cluster size is a tick on the x-axis
     plt.grid(True, alpha=0.5)
 
+    plt.tick_params('both', labelsize=14)
     plt.savefig(save_plots_to_SS + f"plot_{column_no}_model_sw_7_SS_run_3_v2.png", dpi='figure')
     plt.show()
 
 
-# plots 1 to 8 for Model 7 with varying switching rate - Tau_sw (left) and K_sw (right)
+# plots 1 to 8 for Model 7 with varying switching rate - Tau_sw
 """
 for i, column in enumerate(column_name):
     mean_7_sw, std_7_sw, sem_7_sw = get_stats_7(data_frames_7_trimmed, data_frame_name[i])
@@ -378,9 +400,6 @@ for i, column in enumerate(column_name):
 
 
 # trimmed outfile SS plot model 0
-
-models_05678 = ('Model 0', 'Model 5', 'Model 6', 'Model 7', 'Model 8')
-x_pos_05678 = np.arange(len(models_05678))
 
 trimmed_outfiles_list_05678_v2 = ['trimmed_outfile_0_run_1_v2.dat'] + [f'trimmed_outfile_{i}_run_3_v2.dat' for i in range(5, 9)]
 
@@ -396,8 +415,9 @@ for i in range(1, 6):
 
 
 def SS_plots_models_05678(mean_05678, std_05678, sem_05678, column_name, column_no):
-    bar_labels_mean = [f'{model}: {mean_05678[i]:.2f} ± {sem_05678[i]:.2f} (1 SEM)' for i, model in enumerate(models_05678)]
-    bar_labels_std = [f'{model}: {std_05678[i]:.2f} ± ---' for i, model in enumerate(models_05678)]
+    bar_labels_mean = [f'Model {model}: {mean_05678[i]:.2f} ± {sem_05678[i]:.2f} (1 SEM)' for i, model in enumerate(models_05678)]
+    bar_labels_std = [f'Model {model}: {std_05678[i]:.2f} ± ---' for i, model in enumerate(models_05678)]
+    model_labels = [f'Model {model}' for model in (models_05678)]
 
     fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
 
@@ -405,7 +425,7 @@ def SS_plots_models_05678(mean_05678, std_05678, sem_05678, column_name, column_
     fig.supylabel(column_name, fontsize ='16')
     fig.suptitle(f'{column_name} for different models - Mean ± 1 SEM (left) and STD (right) - fixed', fontsize='16')
 
-    left_bar = axs[0].bar(models_05678, mean_05678, yerr=sem_05678, capsize=2, label=bar_labels_mean, color=['k']+colors[:4])
+    left_bar = axs[0].bar(model_labels, mean_05678, yerr=sem_05678, capsize=2, label=bar_labels_mean, color=['k']+colors[:4])
 
     axs[0].set_xticks(x_pos_05678)
     axs[0].tick_params(labelsize=14)
@@ -413,7 +433,7 @@ def SS_plots_models_05678(mean_05678, std_05678, sem_05678, column_name, column_
     axs[0].grid(True, alpha=0.5)
 
 
-    right_bar = axs[1].bar(models_05678, std_05678, label=bar_labels_std, color=['k']+colors[:4])
+    right_bar = axs[1].bar(model_labels, std_05678, label=bar_labels_std, color=['k']+colors[:4])
 
     axs[1].set_xticks(x_pos_05678)
     axs[1].tick_params(labelsize=14)
@@ -424,21 +444,54 @@ def SS_plots_models_05678(mean_05678, std_05678, sem_05678, column_name, column_
     plt.show()
 
 
-def get_stats_05678(data_frames, column):
-    mean_list = []
-    std_list = []
-    sem_list = []
-    for i in range(1, 6):
-        mean, std, sem = calc_stats(data_frames[i][column])
-        mean_list.append(mean)
-        std_list.append(std)
-        sem_list.append(sem)
-    return mean_list, std_list, sem_list
-
-
 # steady state plots 1 to 8 for models 0, 5, 6, 7 + 8 - Mean ± 1 SEM (left) and STD (right) - proteins being type 4 + 5
 """
 for i, column in enumerate(column_name):
     mean_05678, std_05678, sem_05678 = get_stats_05678(data_frames_05678_trimmed_v2, data_frame_name[i])
     SS_plots_models_05678(mean_05678, std_05678, sem_05678, column_name[i], (i+1))
 """
+
+
+# full outfile plots for models 5678 with varying no of proteins
+
+outfiles_list_5678_var_nop_v2 = [f'outfile_{i}_var_{j}00_run_3_v2.dat' for i in range(5, 9) for j in range(3, 7)]
+
+# dictionary to store data frames
+data_frames_5678_var_nop_v2 = {}
+
+# parse data
+for i in range(1, 17):
+    data_frames_5678_var_nop_v2[i] = pd.read_csv(path_to_outfiles + outfiles_list_5678_var_nop_v2[i-1], sep=' ', comment='#', header=None)
+    data_frames_5678_var_nop_v2[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
+                                                'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
+                                                'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
+
+
+def full_plots_5678_var_nop(data_frame_name, column_name, column_no):
+    plt.figure(figsize=(16, 10))
+
+    for i in range(1, 5):
+
+        plt.plot(data_frames_5678_var_nop_v2[1]['Timesteps'], data_frames_5678_var_nop_v2[1][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 300 proteins')
+        plt.plot(data_frames_5678_var_nop_v2[2]['Timesteps'], data_frames_5678_var_nop_v2[2][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 400 proteins')
+        plt.plot(data_frames_5678_var_nop_v2[3]['Timesteps'], data_frames_5678_var_nop_v2[3][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 500 proteins')
+        plt.plot(data_frames_5678_var_nop_v2[4]['Timesteps'], data_frames_5678_var_nop_v2[4][data_frame_name], marker='.', alpha=0.7, label=f'Model {i+4} - 600 proteins')
+
+    plt.xlabel('Timesteps', fontsize ='16')
+    plt.xticks(fontsize='14')
+
+    plt.ylabel(f'{column_name}', fontsize ='16')
+    plt.yticks(fontsize='14')
+
+    plt.title(f'{column_name} vs Timesteps - v2', fontsize ='16')
+    plt.ticklabel_format(style='plain')
+
+    plt.legend(fontsize="14")
+    plt.grid(True)
+
+    #plt.savefig(save_plots_to + f"plot_{column_no}_model_5678_run_3_v2.png", dpi='figure')
+    plt.show()
+
+
+for i, column in enumerate(column_name):
+    full_plots_5678_var_nop(data_frame_name[i], column_name[i], (i+1))

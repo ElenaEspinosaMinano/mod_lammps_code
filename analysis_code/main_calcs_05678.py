@@ -37,7 +37,7 @@ name_outfile = input("Name of output file: ")
 threshold = 2.4 # cluster threshold - 2.4
 cluster_types = {4, 5}  # cluster target atom type - 4 and 5 are proteins (on / off)
 
-n_atoms = 5600 # no of atoms - for models 05678 (recall for models 1234 it is 5300)
+n_atoms = int(sys.argv[4]) # no of atoms - for models 05678 it should be 5600 unless varying no of prot (recall for models 1234 it is 5300)
 n_poly_atoms = 5000 # no of polymer atoms
 
 path_to_dumpfiles = '/storage/cmstore01/groups/brackley/s2205640/dumpfiles/' # need to change this if running on local computer
