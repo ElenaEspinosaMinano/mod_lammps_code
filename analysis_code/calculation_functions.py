@@ -92,7 +92,7 @@ def clusters_greater_than_1(cluster_ids, size_of_clusters, no_of_clusters):
 
     for i, cluster_id in enumerate(cluster_ids):
         if cluster_id != -2:
-            if size_of_clusters[cluster_id - 1] == 1:
+            if size_of_clusters[cluster_id - 1] == 1: # this ONLY works because cluster ids start at 1 (ie - there is no cluster id = 0)
                 cluster_ids_v2[i] = -2
 
     # list of cluster sizes greater than 1, mean of these revised cluster sizes, largest cluster size
@@ -144,7 +144,7 @@ def fraction_clusters_bound_to_poly(atoms, cluster_ids_v2, no_of_clusters_v2, ta
         Returns the fraction of clusters bound to the polymer of type=1, 2 or 3 """
 
     def protein_bound_to_poly(j):
-        """ Takes in index of a protein (type 4) and finds if it is bound to polymer (type=1, 2 or 3). 
+        """ Takes in index of a protein (type 4/5) and finds if it is bound to polymer (type=1, 2 or 3). 
             Bound to polymer if within threshold distance of 1.8. Or if sep_2 < threshold_2 (3.24). 
             Stops and returns True if it is bound. False if not bound. """
         for i, other_atom in enumerate(atoms):
@@ -163,8 +163,8 @@ def fraction_clusters_bound_to_poly(atoms, cluster_ids_v2, no_of_clusters_v2, ta
             # check if the protein belonging to that cluster id is bound to a polymer bead. If yes, add to bound_clusters list.
             if protein_bound_to_poly(j):
                 bound_clusters.append(cluster_id)
-
-    fraction_bound = len(bound_clusters) / no_of_clusters_v2 # no of bound clusters / total no of clusters > 1
+                
+    fraction_bound = len(bound_clusters) / no_of_clusters_v2 # no of bound clusters / total no of clusters > 1 - make sure no duplicates in bound clusters
 
     return fraction_bound
 

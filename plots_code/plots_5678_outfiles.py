@@ -227,14 +227,14 @@ def plot_histogram_models_5678(cs_list_step_1, counts_list, model, color):
 
 
 trimmed_outfiles_cs_list_5678_v2 = [f'trimmed_outfile_cs_{i}_run_3_v2.dat' for i in range(5, 9)]
-
+"""
 # parse data
 for i in range(1, 5):
     model_i_cs_counter, no_of_frames_5678_v2 = count_cluster_sizes(trimmed_outfiles_cs_list_5678_v2[i-1])
     model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames_5678_v2)
     
     plot_histogram_models_5678(model_i_cs_list_step_1, model_i_counts_list, (i+4), colors[i-1])
-
+"""
 
 
 # trimmed outfile plots for Model 7 with varying switching rate
@@ -270,7 +270,7 @@ k_sw = (1/(np.arange(300, 800, 100))).tolist()
 
 
 def plots_model_7_sw(mean_7_sw, std_7_sw, sem_7_sw, column_name, column_no):
-    fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
+    """fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
 
     fig.supylabel(f'{column_name}', fontsize ='16')
     fig.suptitle(f'{column_name} vs. switching interval (time units) (left) and switch rate (1/time units) (right)', fontsize='16')
@@ -291,11 +291,29 @@ def plots_model_7_sw(mean_7_sw, std_7_sw, sem_7_sw, column_name, column_no):
     axs[1].grid(True, alpha=0.5)
 
     plt.savefig(save_plots_to_SS + f"plot_{column_no}_model_sw_7_SS_run_3_v2.png", dpi='figure')
+    plt.show()"""
+
+
+    plt.figure(figsize=(16, 10))
+    
+    plt.errorbar(tau_sw, mean_7_sw, yerr=sem_7_sw, capsize=2, fmt='.r', alpha=0.7, ecolor='black')
+
+    plt.xlabel('Switching interval (time units)')
+    plt.ylabel(f'{column_name}', fontsize ='16')
+    plt.title(f'{column_name} vs. switching interval (time units)')
+    
+    plt.xticks(tau_sw)  # ensure each cluster size is a tick on the x-axis
+    plt.grid(True, alpha=0.5)
+
+    plt.savefig(save_plots_to_SS + f"plot_{column_no}_model_sw_7_SS_run_3_v2.png", dpi='figure')
     plt.show()
 
 
 # plots 1 to 8 for Model 7 with varying switching rate - Tau_sw (left) and K_sw (right)
-
+"""
 for i, column in enumerate(column_name):
     mean_7_sw, std_7_sw, sem_7_sw = get_stats_7(data_frames_7_trimmed, data_frame_name[i])
     plots_model_7_sw(mean_7_sw, std_7_sw, sem_7_sw, column_name[i], (i+1))
+"""
+
+
