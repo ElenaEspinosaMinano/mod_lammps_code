@@ -317,3 +317,66 @@ for i, column in enumerate(column_name):
 """
 
 
+# trimmed outfile SS plot model 0
+
+models_05678 = ('Model 0', 'Model 5', 'Model 6', 'Model 7', 'Model 8')
+
+trimmed_outfiles_list_05678_v2 = ['trimmed_outfile_0_run_1_v2.dat', f'trimmed_outfile_{i}_run_3_v2.dat' for i in range(5, 9)]
+
+# dictionary to store data frames
+data_frames_05678_trimmed_v2 = {}
+
+# parse data
+for i in range(1, 6):
+    data_frames_05678_trimmed_v2[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_05678_v2[i-1], sep=' ', comment='#', header=None)
+    data_frames_05678_trimmed_v2[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
+                                        'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
+                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
+
+
+def SS_plots_models_05678(mean_05678, std_05678, sem_05678, column_name, column_no):
+    bar_labels_mean = [f'{model}: {mean_05678[i]:.2f} ± {sem_05678[i]:.2f} (1 SEM)' for i, model in enumerate(models_05678)]
+    bar_labels_std = [f'{model}: {std_05678[i]:.2f} ± ---' for i, model in enumerate(models_05678)]
+
+    fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
+
+    fig.supxlabel('Models', fontsize ='16')
+    fig.supylabel(column_name, fontsize ='16')
+    fig.suptitle(f'{column_name} for different models - Mean ± 1 SEM (left) and STD (right) - fixed', fontsize='16')
+
+    left_bar = axs[0].bar(models_05678, mean_05678, yerr=sem_05678, capsize=2, label=bar_labels_mean, color=colors[:4])
+
+    axs[0].set_xticks(x_pos)
+    axs[0].tick_params(labelsize=14)
+    axs[0].legend(fontsize=14)
+    axs[0].grid(True, alpha=0.5)
+
+
+    right_bar = axs[1].bar(models_05678, std_05678, label=bar_labels_std, color=colors[:4])
+
+    axs[1].set_xticks(x_pos)
+    axs[1].tick_params(labelsize=14)
+    axs[1].legend(fontsize=14)
+    axs[1].grid(True, alpha=0.5)
+
+    #plt.savefig(save_plots_to_SS + f"plot_{column_no}_model_5678_SS_run_3_v2.png", dpi='figure')
+    plt.show()
+
+
+def get_stats_05678(data_frames, column):
+    mean_list = []
+    std_list = []
+    sem_list = []
+    for i in range(1, 6):
+        mean, std, sem = calc_stats(data_frames[i][column])
+        mean_list.append(mean)
+        std_list.append(std)
+        sem_list.append(sem)
+    return mean_list, std_list, sem_list
+
+
+# steady state plots 1 to 8 for models 0, 5, 6, 7 + 8 - Mean ± 1 SEM (left) and STD (right) - proteins being type 4 + 5
+
+for i, column in enumerate(column_name):
+    mean_05678, std_05678, sem_05678 = get_stats_05678(data_frames_05678_trimmed_v2, data_frame_name[i])
+    SS_plots_models_05678(mean_05678, std_05678, sem_05678, column_name[i], (i+1))
