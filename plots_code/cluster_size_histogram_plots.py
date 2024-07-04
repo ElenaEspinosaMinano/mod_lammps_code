@@ -198,7 +198,7 @@ for i in range(1, 4):
     model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames_567_5)
     
     plot_histogram_models_123(model_i_cs_list_step_1, model_i_counts_list, (i+4), colors[i-1])
-"""
+
 
 ###
 #   Third investigation - Models 5, 6, 7 + 8 histrogram plots of steady state cluster sizes
@@ -212,3 +212,12 @@ for i in range(1, 5):
     model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames_5678_v2)
     
     plot_histogram_models_123(model_i_cs_list_step_1, model_i_counts_list, (i+4), colors[i-1])
+"""
+
+trimmed_outfiles_cs_list_123_v2 = [f'trimmed_outfile_cs_{i}_run_1_v2.dat' for i in range(1, 4)]
+
+for i in range(1, 4):
+    model_i_cs_counter, no_of_frames_123 = count_cluster_sizes(trimmed_outfiles_cs_list_123_v2[i-1])
+    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames_123)
+    
+    plot_histogram_models_123(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])

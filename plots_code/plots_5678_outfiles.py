@@ -545,3 +545,74 @@ for i, column in enumerate(column_name):
 """
 
 
+
+# trimmed outfile SS plots for models 123 version 2
+
+trimmed_outfiles_list_123 = [f'trimmed_outfile_{i}_run_1_v2.dat' for i in range(1, 4)]
+
+# dictionary to store data frames
+data_frames_123_trimmed = {}
+
+# parse data
+for i in range(1, 4):
+    data_frames_123_trimmed[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_123[i-1], sep=' ', comment='#', header=None)
+    data_frames_123_trimmed[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
+                                        'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
+                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
+
+# get stats of models 123 for a particular dataframe and column + append it to a list
+def get_stats_123(data_frames, column):
+    mean_list = []
+    std_list = []
+    sem_list = []
+    for i in range(1, 4):
+        mean, std, sem = calc_stats(data_frames[i][column])
+        mean_list.append(mean)
+        std_list.append(std)
+        sem_list.append(sem)
+    return mean_list, std_list, sem_list
+
+
+prop_cycle = plt.rcParams['axes.prop_cycle']
+colors = prop_cycle.by_key()['color']
+
+
+models_123 = ('Model 1', 'Model 2', 'Model 3')
+x_pos_123 = np.arange(len(models_123))
+
+
+def plots_models_123(mean_123, std_123, sem_123, column_name, column_no):
+    bar_labels_mean = [f'{model}: {mean_123[i]:.2f} ± {sem_123[i]:.2f} (1 SEM)' for i, model in enumerate(models_123)]
+    bar_labels_std = [f'{model}: {std_123[i]:.2f} ± ---' for i, model in enumerate(models_123)]
+
+    fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
+
+    fig.supxlabel('Models', fontsize ='16')
+    fig.supylabel(column_name, fontsize ='16')
+    fig.suptitle(f'{column_name} for different models - Mean ± 1 SEM (left) and STD (right)', fontsize='16')
+
+    left_bar = axs[0].bar(models_123, mean_123, yerr=sem_123, capsize=2, label=bar_labels_mean, color=colors[:4])
+
+    axs[0].set_xticks(x_pos_123)
+    axs[0].tick_params(labelsize=14)
+    axs[0].legend(fontsize=14)
+    axs[0].grid(True, alpha=0.5)
+
+
+    right_bar = axs[1].bar(models_123, std_123, label=bar_labels_std, color=colors[:4])
+
+    axs[1].set_xticks(x_pos_123)
+    axs[1].tick_params(labelsize=14)
+    axs[1].legend(fontsize=14)
+    axs[1].grid(True, alpha=0.5)
+
+    plt.savefig(save_plots_to_SS + f"plot_{column_no}_model_123_SS_run_1_v2.png", dpi='figure')
+    plt.show()
+
+
+# plots 1 to 8 for models 1, 2 and 3 - Mean ± 1 SEM (left) and STD (right)
+
+for i, column in enumerate(column_name):
+    mean_123_1, std_123_1, sem_123_1 = get_stats_123(data_frames_123_trimmed, data_frame_name[i])
+    plots_models_123(mean_123_1, std_123_1, sem_123_1, column_name[i], (i+1))
+
