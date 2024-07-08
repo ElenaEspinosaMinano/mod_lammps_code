@@ -255,7 +255,7 @@ def get_counts_and_sizes(cluster_size_counter, no_of_frames):
     # gets value for key if in cluster_size_counter (ie. gets counts), if not it defaults that count to 0
     counts_list = [cluster_size_counter.get(size, 0) for size in sizes_list_step_1]
 
-    return sizes_list_step_1, (np.array(counts_list)/no_of_frames).tolist() # (np.array(counts_list)/no_of_frames).tolist()
+    return sizes_list_step_1, (np.array(counts_list)/no_of_frames).tolist()
 
 
 def plot_histogram_models_05678(cs_list_step_1, counts_list, model, color):
