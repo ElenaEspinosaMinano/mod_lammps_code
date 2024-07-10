@@ -1,4 +1,4 @@
-### Using trimmed outfiles to calculate the mean, standard error on the mean and standard deviation of quantities - fixed :)
+### Using trimmed outfiles to calculate the mean, standard error on the mean and standard deviation of quantities - v3 :)
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -45,7 +45,7 @@ def get_stats_123(data_frames, column):
     mean_list = []
     std_list = []
     sem_list = []
-    for i in range(1, 4):
+    for i in range(1, 5):
         mean, std, sem = calc_stats(data_frames[i][column])
         mean_list.append(mean)
         std_list.append(std)
@@ -164,6 +164,24 @@ def plot_histogram_models(cs_list_step_1, counts_list, model, color):
     plt.show()
 
 
+def plot_histogram_models_0123(cs_list_step_1, counts_list, model, color):
+
+    plt.figure(figsize=(16, 10))
+    
+    plt.bar(cs_list_step_1, counts_list, color=color)
+
+    plt.xlabel('Cluster sizes', fontsize ='16')
+    plt.ylabel('Counts', fontsize ='16')
+    plt.title(f'Distribution of cluster sizes for Model {model} - v3', fontsize ='16')
+
+    plt.xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # ensure each cluster size is a tick on the x-axis
+    plt.grid(True, alpha=0.5)
+
+    plt.tick_params('both', labelsize=14)
+    plt.savefig(save_plots_to_hists + f"cs_hist_plot_model_{model}_SS_run_1_v3.png", dpi='figure')
+    plt.show()
+
+
 def hist_plot_model_i_single_timestep(cs_list_step_1, counts_list, model, color):
 
     plt.figure(figsize=(16, 10))
@@ -191,7 +209,7 @@ data_frame_name = ['No_of_clusters', 'Mean_size_of_clusters',
                    'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
                    'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
 
-models_123 = (1, 2, 3)
+models_123 = (1, 2, 3, 4)
 x_pos_123 = np.arange(len(models_123))
 
 models_05678 = (0, 5, 6, 7, 8)
@@ -248,13 +266,13 @@ for i, column in enumerate(column_name):
 
 ### -----------------------------------------------------------------------------------------------------------------------------
 
-trimmed_outfiles_list_123 = [f'trimmed_outfile_{i}_run_1_v3.dat' for i in range(1, 4)]
+trimmed_outfiles_list_123 = [f'trimmed_outfile_{i}_run_1_v3.dat' for i in range(1, 4)] + ['trimmed_outfile_4_var_2_run_1_v3.dat']
 
 # dictionary to store data frames
 data_frames_123_trimmed = {}
 
 # parse data
-for i in range(1, 4):
+for i in range(1, 5):
     data_frames_123_trimmed[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_123[i-1], sep=' ', comment='#', header=None)
     data_frames_123_trimmed[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
                                         'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
@@ -272,7 +290,7 @@ def plots_models_123(mean_123, std_123, sem_123, column_name, column_no):
     fig.supylabel(column_name, fontsize ='16')
     fig.suptitle(f'{column_name} for different models - Mean ± 1 SEM (left) and STD (right) - v3', fontsize='16')
 
-    left_bar = axs[0].bar(model_labels, mean_123, yerr=sem_123, capsize=2, label=bar_labels_mean, color=colors[:3])
+    left_bar = axs[0].bar(model_labels, mean_123, yerr=sem_123, capsize=2, label=bar_labels_mean, color=colors[:4])
 
     axs[0].set_xticks(x_pos_123)
     axs[0].tick_params(labelsize=14)
@@ -280,14 +298,14 @@ def plots_models_123(mean_123, std_123, sem_123, column_name, column_no):
     axs[0].grid(True, alpha=0.5)
 
 
-    right_bar = axs[1].bar(model_labels, std_123, label=bar_labels_std, color=colors[:3])
+    right_bar = axs[1].bar(model_labels, std_123, label=bar_labels_std, color=colors[:4])
 
     axs[1].set_xticks(x_pos_123)
     axs[1].tick_params(labelsize=14)
     axs[1].legend(fontsize=14)
     axs[1].grid(True, alpha=0.5)
 
-    plt.savefig(save_plots_to_SS + f"plot_{column_no}_model_123_SS_run_1_v3.png", dpi='figure')
+    plt.savefig(save_plots_to_SS + f"plot_{column_no}_model_1234_SS_run_1_v3.png", dpi='figure')
     plt.show()
 
 
@@ -308,9 +326,7 @@ for i in range(1, 4):
     model_i_cs_counter, no_of_frames = count_cluster_sizes(trimmed_outfiles_cs_list_123[i-1])
     model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames)
 
-    plot_histogram_models(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
-
-    hist_plot_model_i_single_timestep(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
+    plot_histogram_models_0123(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
 
     line_no = 201  # specify the line no in cs outfile you want to plot - line no 201 is last timestep
 
@@ -432,7 +448,7 @@ trimmed_outfiles_cs_list_05678 = ['trimmed_outfile_cs_0_run_1_v3.dat'] + [f'trim
 model_i_cs_counter, no_of_frames = count_cluster_sizes(trimmed_outfiles_cs_list_05678[0])
 model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames)
 
-plot_histogram_models(model_i_cs_list_step_1, model_i_counts_list, 0, 'black')
+plot_histogram_models_0123(model_i_cs_list_step_1, model_i_counts_list, 0, 'black')
 
 for i in range(5, 9):
     model_i_cs_counter, no_of_frames = count_cluster_sizes(trimmed_outfiles_cs_list_05678[i-4])
