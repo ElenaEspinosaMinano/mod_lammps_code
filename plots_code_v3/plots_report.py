@@ -195,7 +195,7 @@ data_frame_name = ['No_of_clusters', 'Mean_size_of_clusters',
                    'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
                    'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
 
-models_12_05678 = (1, 2, 0, 5, 6, 7, 8)
+models_12_05678 = (1, 2, 0, 5, 6, "7A", "7B")
 x_pos_12_05678 = np.arange(len(models_12_05678))
 
 
@@ -206,6 +206,59 @@ x_pos_12_05678 = np.arange(len(models_12_05678))
 ###
 
 ### -----------------------------------------------------------------------------------------------------------------------------
+
+models_1234_05678 = (1, 2, 3, 4, 0, 5, 6, "7A", "7B")
+x_pos_1234_05678 = np.arange(len(models_1234_05678))
+colors_list_2 = colors[:4]+['black']+colors[:4]
+
+outfiles_list_1234_05678 = [f'outfile_{i}_run_1_v3.dat' for i in range(1, 4)] + ['outfile_4_var_2_run_1_v3.dat','outfile_0_run_1_v3.dat'] + [f'outfile_{i}_run_1_v3.dat' for i in range(5, 9)]
+
+# dictionary to store data frames
+data_frames_1234_05678 = {}
+
+# parse data
+for i in range(1, 10):
+    data_frames_1234_05678[i] = pd.read_csv(path_to_outfiles + outfiles_list_1234_05678[i-1], sep=' ', comment='#', header=None)
+    data_frames_1234_05678[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
+                                        'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
+                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
+
+
+def full_plots_1234_05678(column_name, column_no):
+
+    fig, axs = plt.subplots(2, figsize=(16, 10), tight_layout=True)
+
+    fig.supxlabel('Timesteps', fontsize ='16')
+    fig.supylabel(column_name, fontsize ='16')
+    fig.suptitle('Number of clusters vs Timesteps for Models 1-4 (top) and Models 0, 5-7 (bottom)', fontsize='16')
+
+    for i in range(1, 5):
+        axs[0].plot(data_frames_1234_05678[i]['Timesteps'], data_frames_1234_05678[i]['No_of_clusters'], marker='.', alpha=0.7, label=f'Model {models_1234_05678[i-1]}')
+
+    axs[0].axvline(1000000, linestyle='--', alpha=0.7, label='Steady state timestep', color='black')
+    axs[0].tick_params(labelsize=14)
+    axs[0].legend(fontsize=14)
+    axs[0].grid(True, alpha=0.5)
+
+
+    for j in range(5, 10):
+        axs[1].plot(data_frames_1234_05678[j]['Timesteps'], data_frames_1234_05678[j]['No_of_clusters'], marker='.', alpha=0.7, label=f'Model {models_1234_05678[j-1]}', color=colors_list_2[j-1])
+
+    axs[1].axvline(3000000, linestyle='--', alpha=0.7, label='Steady state timestep', color='black')
+    axs[1].tick_params(labelsize=14)
+    axs[1].legend(fontsize=14)
+    axs[1].grid(True, alpha=0.5)
+
+    plt.savefig(save_plots_to_report + f"full_outfile_NoC_plot_models_1234_05678_v3.png", dpi='figure')
+
+    plt.show()
+
+
+# full outfile plots for models 1234 and 05678
+full_plots_1234_05678(column_name[0], 1)
+
+### -----------------------------------------------------------------------------------------------------------------------------
+
 
 trimmed_outfiles_list_12_05678 = [f'trimmed_outfile_{i}_run_1_v3.dat' for i in range(1, 3)] + ['trimmed_outfile_0_run_1_v3.dat'] + [f'trimmed_outfile_{i}_run_1_v3.dat' for i in range(5, 9)]
 
@@ -287,7 +340,7 @@ for i, column in enumerate(columns_to_plot):
 
 
 # Show the plot
-plt.savefig(save_plots_to_report + f"plot_test_models.png", dpi='figure')
+plt.savefig(save_plots_to_report + f"SS_plots_1_to_4_models_12_05678_v3.png", dpi='figure')
 plt.show()
 
 
@@ -306,48 +359,51 @@ for i, column in enumerate(columns_to_plot):
     means, stds, sems = get_stats_12_05678(data_frames_12_05678_trimmed, column)
     plot_mean_with_sem(axs[i], means, sems, column_name[i+4])
 
-# Set common labels
-#fig.supxlabel('Models', fontsize=16)
-#fig.supylabel('Values', fontsize=16)
-#fig.suptitle('Mean ± 1 SEM for Different Models (Selected Columns)', fontsize=20)
-
 
 # Show the plot
-plt.savefig(save_plots_to_report + f"plot_test_models_2.png", dpi='figure')
+plt.savefig(save_plots_to_report + f"SS_plots_5_to_8_models_12_05678_v3.png", dpi='figure')
+plt.show()
+
+
+### -----------------------------------------------------------------------------------------------------------------------------
+
+colors_list_3 = colors[:2]+colors[:4]
+models_12_5678 = (1, 2, 5, 6, "7A", "7B")
+
+def plot_histogram_models_12_5678(ax, cs_list_step_1, counts_list, model, color):
+    
+    hist = ax.bar(cs_list_step_1, counts_list, color=color, label=f'Model {model}')
+
+    ax.set_xticks((np.arange(0, max(cs_list_step_1)+1, 5)).tolist())  # ensure each cluster size is a tick on the x-axis
+    ax.grid(True, alpha=0.5)
+
+    ax.tick_params('both', labelsize=12)
+    ax.legend(fontsize=12)
+
+
+trimmed_outfiles_cs_list_12_5678 = [f'trimmed_outfile_cs_{i}_run_1_v3.dat' for i in range(1, 3)] + [f'trimmed_outfile_cs_{i}_run_1_v3.dat' for i in range(5, 9)]
+
+# cluster sizes histogram plots for models 1, 2, 5, 6, 7 + 8
+
+fig, axs = plt.subplots(3, 2, figsize=(16, 12), tight_layout=True)
+
+axs = axs.flatten()
+
+for j, trimmed_outfile_cs in enumerate(trimmed_outfiles_cs_list_12_5678):
+
+    model_i_cs_counter, no_of_frames = count_cluster_sizes(trimmed_outfile_cs)
+    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames)
+
+    plot_histogram_models_12_5678(axs[j], model_i_cs_list_step_1, model_i_counts_list, models_12_5678[j], colors_list_3[j])
+
+fig.supxlabel('Cluster size distribution', fontsize=16)
+fig.supylabel('Counts', fontsize=16)
+
+plt.savefig(save_plots_to_report + f"hists.png", dpi='figure')
 plt.show()
 
 
 
-
-
-
-
-# plots 1 to 8 for models 1, 2 + 0, 5, 6, 7, 8 - Mean ± 1 SEM (left) and STD (right) version 3
-"""
-for i, column in enumerate(column_name):
-    mean_123_1, std_123_1, sem_123_1 = get_stats_12_05678(data_frames_12_05678_trimmed, data_frame_name[i])
-    plots_models_12_05678(mean_123_1, std_123_1, sem_123_1, column_name[i], (i+1))
-"""
-
-### -----------------------------------------------------------------------------------------------------------------------------
-
-trimmed_outfiles_cs_list_123 = [f'trimmed_outfile_cs_{i}_run_1_v3.dat' for i in range(1, 4)]
-
-# cluster sizes histogram plots for models 1, 2 + 3
-"""
-for i in range(1, 4):
-    model_i_cs_counter, no_of_frames = count_cluster_sizes(trimmed_outfiles_cs_list_123[i-1])
-    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames)
-
-    plot_histogram_models_0123(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
-
-    line_no = 201  # specify the line no in cs outfile you want to plot - line no 201 is last timestep
-
-    model_i_cs_counter, no_of_frames = count_cluster_sizes(trimmed_outfiles_cs_list_123[i-1], line_no)
-    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames)
-
-    hist_plot_model_i_single_timestep(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-1])
-"""
 
 
 ### -----------------------------------------------------------------------------------------------------------------------------

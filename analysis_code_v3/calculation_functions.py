@@ -3,7 +3,7 @@
 import statistics as s
 
 def dbscan(atoms, threshold, cluster_types):
-    """ Takes in a list of Atom objects, distance threshold + cluster types.
+    """ Takes in a list of Atom objects, distance threshold + cluster types (type=4).
         Sets the cluster id for atoms we are not interested in to -2.
         Returns a list of cluster ids where the ith element is the cluster id for ith atom in input list """
 
@@ -11,13 +11,13 @@ def dbscan(atoms, threshold, cluster_types):
         return []
 
     cluster_id = 0
-    cluster_ids = [-1] * len(atoms)  # Initialize cluster IDs for each atom; -1 means unclassified
+    cluster_ids = [-1] * len(atoms)  # initialize cluster ids for each atom; -1 means unclassified
 
     threshold_2 = threshold**2
 
     def find_neighbors(atom_index):
-        """ Takes in index of an atom and find the neighbours of that atom. 
-            Atoms are neighbours if within threshold distance of 2.4.
+        """ Takes in index of an atom and finds the neighbours of that atom. 
+            Atoms are neighbours if within cluster threshold distance of 2.3.
             Returns a list of neighbours of type=4 for atom index inputted """
 
         return [i for i, other_atom in enumerate(atoms)
@@ -38,7 +38,7 @@ def dbscan(atoms, threshold, cluster_types):
 
         neighbors = find_neighbors(i) # finds neighbours of atom i
 
-        cluster_id += 1
+        cluster_id += 1  # cluster_id acts like a 'cluster count'
         cluster_ids[i] = cluster_id
 
         k = 0
@@ -55,7 +55,7 @@ def dbscan(atoms, threshold, cluster_types):
                         neighbors.append(new_neighbor)
             k += 1
             
-    no_of_clusters = cluster_id # cluster_id acts like a 'cluster count'
+    no_of_clusters = cluster_id
 
     return no_of_clusters, cluster_ids
 
