@@ -13,11 +13,14 @@ if local_or_cplab == "local":
     path_to_outfiles = '/home/elenaespinosa/OneDrive/Uni/Summer_courses/Summer_project/mod_lammps_code/outfiles_v3/'
     path_to_trimmed_outfiles = '/home/elenaespinosa/OneDrive/Uni/Summer_courses/Summer_project/mod_lammps_code/outfiles_v3/trimmed_outfiles/'
     save_plots_to_report = '/home/elenaespinosa/OneDrive/Uni/Summer_courses/Summer_project/mod_lammps_code/plots_v3/report/'
+    save_plots_to_SS = '/home/elenaespinosa/OneDrive/Uni/Summer_courses/Summer_project/mod_lammps_code/plots_v3/steady_state/'
+
 
 else:
     path_to_outfiles = '/home/s2205640/Documents/summer_project/mod_lammps_code/outfiles_v3/'
     path_to_trimmed_outfiles = '/home/s2205640/Documents/summer_project/mod_lammps_code/outfiles_v3/trimmed_outfiles/'
     save_plots_to_report = '/home/s2205640/Documents/summer_project/mod_lammps_code/plots_v3/report/'
+    save_plots_to_SS = '/home/s2205640/Documents/summer_project/mod_lammps_code/plots_v3/steady_state/'
 
 
 ### -----------------------------------------------------------------------------------------------------------------------------
@@ -230,13 +233,14 @@ def full_plots_1234_05678(column_name, column_no):
 
     fig.supxlabel('Timesteps', fontsize ='16')
     fig.supylabel(column_name, fontsize ='16')
-    fig.suptitle('Number of clusters vs Timesteps for Models 1-4 (top) and Models 0, 5-7 (bottom)', fontsize='16')
+    #fig.suptitle('Number of clusters vs Timesteps for Models 1-4 (top) and Models 0, 5-7 (bottom)', fontsize='16')
 
     for i in range(1, 5):
         axs[0].plot(data_frames_1234_05678[i]['Timesteps'], data_frames_1234_05678[i]['No_of_clusters'], marker='.', alpha=0.7, label=f'Model {models_1234_05678[i-1]}')
 
     axs[0].axvline(1000000, linestyle='--', alpha=0.7, label='Steady state timestep', color='black')
     axs[0].tick_params(labelsize=14)
+    axs[0].ticklabel_format(style='plain')
     axs[0].legend(fontsize=14)
     axs[0].grid(True, alpha=0.5)
 
@@ -246,6 +250,7 @@ def full_plots_1234_05678(column_name, column_no):
 
     axs[1].axvline(3000000, linestyle='--', alpha=0.7, label='Steady state timestep', color='black')
     axs[1].tick_params(labelsize=14)
+    axs[1].ticklabel_format(style='plain')
     axs[1].legend(fontsize=14)
     axs[1].grid(True, alpha=0.5)
 
@@ -255,7 +260,7 @@ def full_plots_1234_05678(column_name, column_no):
 
 
 # full outfile plots for models 1234 and 05678
-full_plots_1234_05678(column_name[0], 1)
+#full_plots_1234_05678(column_name[0], 1)
 
 ### -----------------------------------------------------------------------------------------------------------------------------
 
@@ -318,7 +323,7 @@ def plot_mean_with_sem(ax, means, sems, column_name):
         bar.set_label(f'{label}: {mean:.2f} ± {sem:.2f}')
     
     ax.legend(fontsize=10)
-
+"""
 # Create a 2x2 grid of subplots
 fig, axs = plt.subplots(2, 2, figsize=(16, 12), tight_layout=True)
 
@@ -363,7 +368,7 @@ for i, column in enumerate(columns_to_plot):
 # Show the plot
 plt.savefig(save_plots_to_report + f"SS_plots_5_to_8_models_12_05678_v3.png", dpi='figure')
 plt.show()
-
+"""
 
 ### -----------------------------------------------------------------------------------------------------------------------------
 
@@ -384,7 +389,7 @@ def plot_histogram_models_12_5678(ax, cs_list_step_1, counts_list, model, color)
 trimmed_outfiles_cs_list_12_5678 = [f'trimmed_outfile_cs_{i}_run_1_v3.dat' for i in range(1, 3)] + [f'trimmed_outfile_cs_{i}_run_1_v3.dat' for i in range(5, 9)]
 
 # cluster sizes histogram plots for models 1, 2, 5, 6, 7 + 8
-
+"""
 fig, axs = plt.subplots(3, 2, figsize=(16, 12), tight_layout=True)
 
 axs = axs.flatten()
@@ -401,9 +406,7 @@ fig.supylabel('Counts', fontsize=16)
 
 plt.savefig(save_plots_to_report + f"hists.png", dpi='figure')
 plt.show()
-
-
-
+"""
 
 
 ### -----------------------------------------------------------------------------------------------------------------------------
@@ -456,83 +459,6 @@ for i, column in enumerate(column_name):
     full_plots_05678(data_frame_name[i], column_name[i], (i+1))
 """
 
-### -----------------------------------------------------------------------------------------------------------------------------
-
-trimmed_outfiles_list_05678_v3 = ['trimmed_outfile_0_run_1_v3.dat'] + [f'trimmed_outfile_{i}_run_1_v3.dat' for i in range(5, 9)]
-
-# dictionary to store data frames
-data_frames_05678_trimmed_v3 = {}
-
-# parse data
-for i in range(1, 6):
-    data_frames_05678_trimmed_v3[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_05678_v3[i-1], sep=' ', comment='#', header=None)
-    data_frames_05678_trimmed_v3[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
-                                        'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
-                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
-
-
-def SS_plots_models_05678(mean_05678, std_05678, sem_05678, column_name, column_no):
-    bar_labels_mean = [f'Model {model}: {mean_05678[i]:.2f} ± {sem_05678[i]:.2f} (1 SEM)' for i, model in enumerate(models_05678)]
-    bar_labels_std = [f'Model {model}: {std_05678[i]:.2f} ± ---' for i, model in enumerate(models_05678)]
-    model_labels = [f'Model {model}' for model in (models_05678)]
-
-    fig, axs = plt.subplots(1, 2, sharey=True, figsize=(16, 10), tight_layout=True)
-
-    fig.supxlabel('Models', fontsize ='16')
-    fig.supylabel(column_name, fontsize ='16')
-    fig.suptitle(f'{column_name} for different models - Mean ± 1 SEM (left) and STD (right) - v3', fontsize='16')
-
-    left_bar = axs[0].bar(model_labels, mean_05678, yerr=sem_05678, capsize=2, label=bar_labels_mean, color=['k']+colors[:4])
-
-    axs[0].set_xticks(x_pos_05678)
-    axs[0].tick_params(labelsize=14)
-    axs[0].legend(fontsize=14)
-    axs[0].grid(True, alpha=0.5)
-
-
-    right_bar = axs[1].bar(model_labels, std_05678, label=bar_labels_std, color=['k']+colors[:4])
-
-    axs[1].set_xticks(x_pos_05678)
-    axs[1].tick_params(labelsize=14)
-    axs[1].legend(fontsize=14)
-    axs[1].grid(True, alpha=0.5)
-
-    plt.savefig(save_plots_to_SS + f"plot_{column_no}_model_05678_SS_run_1_v3.png", dpi='figure')
-    plt.show()
-
-
-# steady state plots 1 to 8 for models 0, 5, 6, 7 + 8 - Mean ± 1 SEM (left) and STD (right) - protein clusters being type 4
-"""
-for i, column in enumerate(column_name):
-    mean_05678, std_05678, sem_05678 = get_stats_05678(data_frames_05678_trimmed_v3, data_frame_name[i])
-    SS_plots_models_05678(mean_05678, std_05678, sem_05678, column_name[i], (i+1))
-"""
-
-### -----------------------------------------------------------------------------------------------------------------------------
-
-trimmed_outfiles_cs_list_05678 = ['trimmed_outfile_cs_0_run_1_v3.dat'] + [f'trimmed_outfile_cs_{i}_run_1_v3.dat' for i in range(5, 9)]
-
-# cluster sizes histogram plots for models 0, 5, 6, 7 + 8
-"""
-model_i_cs_counter, no_of_frames = count_cluster_sizes(trimmed_outfiles_cs_list_05678[0])
-model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames)
-
-plot_histogram_models_0123(model_i_cs_list_step_1, model_i_counts_list, 0, 'black')
-
-for i in range(5, 9):
-    model_i_cs_counter, no_of_frames = count_cluster_sizes(trimmed_outfiles_cs_list_05678[i-4])
-    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames)
-
-    plot_histogram_models(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-5])
-
-    line_no = 1401  # specify the line no in cs outfile you want to plot - no 1401 is the last time step can use this to check results in vmd
-
-    model_i_cs_counter, no_of_frames = count_cluster_sizes(trimmed_outfiles_cs_list_05678[i-4], line_no)
-    model_i_cs_list_step_1, model_i_counts_list = get_counts_and_sizes(model_i_cs_counter, no_of_frames)
-
-    hist_plot_model_i_single_timestep(model_i_cs_list_step_1, model_i_counts_list, i, colors[i-5])
-"""
-
 
 ### -----------------------------------------------------------------------------------------------------------------------------
 
@@ -574,11 +500,11 @@ def plots_model_7_sw(mean_7_sw, std_7_sw, sem_7_sw, column_name, column_no):
 
     plt.figure(figsize=(16, 10))
     
-    plt.errorbar(tau_sw, mean_7_sw, yerr=sem_7_sw, capsize=2, fmt='.r', alpha=0.7, ecolor='black')
+    plt.errorbar(tau_sw, mean_7_sw, yerr=sem_7_sw, capsize=2, fmt='.-g', alpha=0.7, ecolor='black')
 
     plt.xlabel('Switching interval (time units)', fontsize ='16')
     plt.ylabel(f'{column_name}', fontsize ='16')
-    plt.title(f'{column_name} vs. switching interval (time units) - v3', fontsize ='16')
+    #plt.title(f'{column_name} vs. switching interval (time units) - v3', fontsize ='16')
     
     plt.xticks(tau_sw)  # ensure each cluster size is a tick on the x-axis
     plt.grid(True, alpha=0.5)
@@ -634,15 +560,17 @@ nop = [300, 400, 500, 600]
 
 def plots_models_5678_var_nop(means, stds, sems, column_name, column_no):
 
+    label_names = (5, 6, "7A", "7B")
+
     plt.figure(figsize=(16, 10))
     
     for i in range(0, 4):
 
-        plt.errorbar(nop, means[i*4:(i+1)*4], yerr=sems[i*4:(i+1)*4], capsize=2, fmt='.-', alpha=0.7, ecolor='black', label=f'Model {i+5}', color=colors[i])
+        plt.errorbar(nop, means[i*4:(i+1)*4], yerr=sems[i*4:(i+1)*4], capsize=2, fmt='.-', alpha=0.7, ecolor='black', label=f'Model {label_names[i]}', color=colors[i])
     
     plt.xlabel('No of proteins', fontsize ='16')
     plt.ylabel(f'{column_name}', fontsize ='16')
-    plt.title(f'{column_name} vs. no of proteins - v3', fontsize ='16')
+    #plt.title(f'{column_name} vs. no of proteins - v3', fontsize ='16')
     
     plt.xticks(nop)  # ensure each cluster size is a tick on the x-axis
     plt.grid(True, alpha=0.5)
@@ -659,4 +587,81 @@ for i, column in enumerate(column_name):
     means, stds, sems = get_stats_5678_nop(data_frames_5678_var_nop_v3, data_frame_name[i])
     plots_models_5678_var_nop(means, stds, sems, column_name[i], (i+1))
 """
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# Function to create a single subplot for increasing no of proteins
+def subplot_models_5678_var_nop(ax, means, sems, column_name):
+
+    label_names = (5, 6, "7A", "7B")
+
+    ax.set_xticks(nop)
+    ax.tick_params(labelsize=14)
+    ax.grid(True, alpha=0.5)
+    ax.set_ylabel(column_name, fontsize=16)
+
+    for i in range(0, 4):
+
+        ax.errorbar(nop, means[i*4:(i+1)*4], yerr=sems[i*4:(i+1)*4], capsize=2, fmt='.-', alpha=0.7, ecolor='black', label=f'Model {label_names[i]}', color=colors[i])
+    
+    ax.legend(fontsize=10)
+
+
+# Create a 2x2 grid of subplots
+fig, axs = plt.subplots(nrows=2, ncols=3, figsize=(16, 12), tight_layout=True)
+
+fig.supxlabel('Number of proteins', fontsize ='16')
+
+# Flatten the axs array for easy iteration
+axs = axs.flatten()
+
+# Specify the columns to plot
+columns_to_plot = data_frame_name[:4] + data_frame_name[6:8]
+column_name_to_plot = column_name[:4] + column_name[6:8]
+
+# Iterate over the specified columns and plot
+for i, column in enumerate(columns_to_plot):
+    means, stds, sems = get_stats_5678_nop(data_frames_5678_var_nop_v3, column)
+    subplot_models_5678_var_nop(axs[i], means, sems, column_name_to_plot[i])
+
+# Show the plot
+plt.savefig(save_plots_to_report + f"condensed_plot_models_5678_SS_var_nop.png", dpi='figure')
+plt.show()
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# Function to create a single subplot
+def subplot_model_7_sw(ax, means, sems, column_name):
+
+    ax.set_xticks(tau_sw)
+    ax.tick_params(labelsize=14)
+    ax.grid(True, alpha=0.5)
+    ax.set_ylabel(column_name, fontsize=16)
+
+    ax.errorbar(tau_sw, means, yerr=sems, capsize=2, fmt='.-g', alpha=0.7, ecolor='black')
+
+
+# Create a 2x2 grid of subplots
+fig, axs = plt.subplots(nrows=2, ncols=3, figsize=(16, 12), tight_layout=True)
+
+fig.supxlabel('Switching interval (time units)', fontsize ='16')
+
+# Flatten the axs array for easy iteration
+axs = axs.flatten()
+
+# Specify the columns to plot
+columns_to_plot = data_frame_name[:5] + data_frame_name[7:8]
+column_name_to_plot = column_name[:5] + column_name[7:8]
+
+# Iterate over the specified columns and plot
+for i, column in enumerate(columns_to_plot):
+    means, stds, sems = get_stats_7(data_frames_7_trimmed, column)
+    subplot_model_7_sw(axs[i], means, sems, column_name_to_plot[i])
+
+# Show the plot
+plt.savefig(save_plots_to_report + f"condensed_plot_model_7_sw.png", dpi='figure')
+plt.show()
 
