@@ -192,7 +192,7 @@ prop_cycle = plt.rcParams['axes.prop_cycle']
 colors = prop_cycle.by_key()['color']
 colors_list = colors[:2]+['black']+colors[:4]
 
-column_name = ['Number of clusters', 'Mean size of clusters', 'Size of largest cluster', 'Number of clusters of size 1', 'Number of proteins bound to polymer', 
+column_name = ['Number of clusters', 'Mean size of clusters (in proteins)', 'Size of largest cluster (in proteins)', 'Number of clusters of size 1', 'Number of proteins bound to polymer', 
                 'Fraction of clusters bound to polymer', 'Number of type 2 polymers bound to proteins', 'Mean number of type 2 polymers per protein cluster']
 data_frame_name = ['No_of_clusters', 'Mean_size_of_clusters', 
                    'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
@@ -369,6 +369,96 @@ for i, column in enumerate(columns_to_plot):
 plt.savefig(save_plots_to_report + f"SS_plots_5_to_8_models_12_05678_v3.png", dpi='figure')
 plt.show()
 """
+
+### -----------------------------------------------------------------------------------------------------------------------------
+
+models_678 = (1, 2, 3)
+x_pos_678 = np.arange(len(models_678))
+colors_list_678 = colors[1:4] # this will show colors orange, green and red
+
+trimmed_outfiles_list_678 = ['trimmed_outfile_6_run_1_v3.dat'] + ['trimmed_outfile_8_run_1_v3.dat'] +['trimmed_outfile_7_run_1_v3.dat'] #[f'trimmed_outfile_{i}_run_1_v3.dat' for i in range(6, 9)]
+
+def get_stats_678(data_frames, column):
+    mean_list = []
+    std_list = []
+    sem_list = []
+    for i in range(1, 4):
+        mean, std, sem = calc_stats(data_frames[i][column])
+        mean_list.append(mean)
+        std_list.append(std)
+        sem_list.append(sem)
+    return mean_list, std_list, sem_list
+
+# dictionary to store data frames
+data_frames_678_trimmed = {}
+
+# parse data
+for i in range(1, 4):
+    data_frames_678_trimmed[i] = pd.read_csv(path_to_trimmed_outfiles + trimmed_outfiles_list_678[i-1], sep=' ', comment='#', header=None)
+    data_frames_678_trimmed[i].columns = ['Timesteps', 'No_of_clusters', 'Mean_size_of_clusters', 
+                                        'Size_of_largest_cluster', 'No_of_clusters_of_size_1', 'No_proteins_bound_to_poly', 
+                                        'Fraction_clusters_bound_to_poly', 'No_type_2_poly_bound_to_prot', 'Mean_no_type_2_in_cluster']
+
+# Function to create a single subplot
+def plot_mean_with_sem(ax, means, sems, column_name):
+    model_labels = [f'Model {model}' for model in models_678]
+    
+    bars = ax.bar(model_labels, means, yerr=sems, capsize=2, color=colors_list_678)
+    ax.set_xticks(x_pos_678)
+    ax.tick_params(labelsize=14)
+    ax.grid(True, alpha=0.5)
+    ax.set_ylabel(column_name, fontsize=16)
+
+    # Adding legend entries for each bar
+    for bar, label, mean, sem in zip(bars, model_labels, means, sems):
+        bar.set_label(f'{label}: {mean:.2f} ± {sem:.2f}')
+    
+    ax.legend(fontsize=10)
+
+# Create a 2x2 grid of subplots
+fig, axs = plt.subplots(2, 2, figsize=(16, 12), tight_layout=True)
+
+# Flatten the axs array for easy iteration
+axs = axs.flatten()
+
+# Specify the columns to plot
+columns_to_plot = data_frame_name[:4]
+
+# Iterate over the specified columns and plot
+for i, column in enumerate(columns_to_plot):
+    means, stds, sems = get_stats_678(data_frames_678_trimmed, column)
+    plot_mean_with_sem(axs[i], means, sems, column_name[i])
+
+# Set common labels
+#fig.supxlabel('Models', fontsize=16)
+#fig.supylabel('Values', fontsize=16)
+#fig.suptitle('Mean ± 1 SEM for Different Models (Selected Columns)', fontsize=20)
+
+
+# Show the plot
+plt.savefig(save_plots_to_report + f"SS_plots_1_to_4_models_678_v3_mod.png", dpi='figure')
+plt.show()
+
+
+
+# Create a 2x2 grid of subplots
+fig, axs = plt.subplots(2, 2, figsize=(16, 12), tight_layout=True)
+
+# Flatten the axs array for easy iteration
+axs = axs.flatten()
+
+# Specify the columns to plot
+columns_to_plot = data_frame_name[4:8]
+
+# Iterate over the specified columns and plot
+for i, column in enumerate(columns_to_plot):
+    means, stds, sems = get_stats_678(data_frames_678_trimmed, column)
+    plot_mean_with_sem(axs[i], means, sems, column_name[i+4])
+
+
+# Show the plot
+plt.savefig(save_plots_to_report + f"SS_plots_5_to_8_models_678_v3_mod.png", dpi='figure')
+plt.show()
 
 ### -----------------------------------------------------------------------------------------------------------------------------
 
@@ -607,7 +697,7 @@ def subplot_models_5678_var_nop(ax, means, sems, column_name):
     
     ax.legend(fontsize=10)
 
-
+"""
 # Create a 2x2 grid of subplots
 fig, axs = plt.subplots(nrows=2, ncols=3, figsize=(16, 12), tight_layout=True)
 
@@ -628,7 +718,7 @@ for i, column in enumerate(columns_to_plot):
 # Show the plot
 plt.savefig(save_plots_to_report + f"condensed_plot_models_5678_SS_var_nop.png", dpi='figure')
 plt.show()
-
+"""
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -643,7 +733,7 @@ def subplot_model_7_sw(ax, means, sems, column_name):
 
     ax.errorbar(tau_sw, means, yerr=sems, capsize=2, fmt='.-g', alpha=0.7, ecolor='black')
 
-
+"""
 # Create a 2x2 grid of subplots
 fig, axs = plt.subplots(nrows=2, ncols=3, figsize=(16, 12), tight_layout=True)
 
@@ -664,4 +754,4 @@ for i, column in enumerate(columns_to_plot):
 # Show the plot
 plt.savefig(save_plots_to_report + f"condensed_plot_model_7_sw.png", dpi='figure')
 plt.show()
-
+"""
